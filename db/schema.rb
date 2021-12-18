@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_12_14_095749) do
+ActiveRecord::Schema.define(version: 2021_12_18_103410) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -43,15 +43,22 @@ ActiveRecord::Schema.define(version: 2021_12_14_095749) do
     t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
   end
 
+  create_table "tour_vehicles", force: :cascade do |t|
+    t.integer "vehicle_id"
+    t.integer "tour_id"
+    t.index ["tour_id", "vehicle_id"], name: "index_tour_vehicles_on_tour_id_and_vehicle_id"
+  end
+
   create_table "tours", force: :cascade do |t|
     t.integer "kind"
     t.string "name"
     t.text "description"
     t.string "time"
     t.integer "limit"
-    t.datetime "departure_day", precision: 6
-    t.datetime "terminal_day", precision: 6
+    t.datetime "begin_date", precision: 6
+    t.datetime "return_date", precision: 6
     t.decimal "price", precision: 9, scale: 2
+    t.string "departure"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
   end
@@ -76,6 +83,11 @@ ActiveRecord::Schema.define(version: 2021_12_14_095749) do
     t.string "uid"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["provider", "uid"], name: "index_users_on_provider_and_uid", unique: true
+  end
+
+  create_table "vehicles", force: :cascade do |t|
+    t.string "name"
+    t.index ["name"], name: "index_vehicles_on_name"
   end
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"

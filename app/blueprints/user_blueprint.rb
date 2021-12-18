@@ -22,7 +22,6 @@
 #  uid                    :string
 #
 class UserBlueprint < Blueprinter::Base
-
   identifier :id
   fields :first_name, :last_name, :email, :phone_number,
          :address, :birthday, :activated, :admin, :created_at

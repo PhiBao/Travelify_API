@@ -6,9 +6,10 @@ class CreateTours < ActiveRecord::Migration[7.0]
       t.text :description
       t.string :time # Only available in single tour
       t.integer :limit # Only available in fixed tour
-      t.datetime :departure_day # Only available in fixed tour
-      t.datetime :terminal_day # Only available in fixed tour
+      t.datetime :begin_date # Only available in fixed tour
+      t.datetime :return_date # Only available in fixed tour
       t.numeric :price, precision: 9, scale: 2
+      t.string :departure
 
       t.timestamps
     end

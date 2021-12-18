@@ -40,8 +40,12 @@ class ToursController < ApplicationController
   end
 
   def tour_params
-    params.permit(:name, :description, :time, :departure_day,
-                  :terminal_day, :price, :kind, :limit, images: [])
+    params.permit(:name, :description, :time, :begin_date, :departure,
+                  :return_date, :price, :kind, :limit, images: [],
+                  tour_vehicles_attributes: [:id, :vehicle_id, '_destroy'])
+          .tap { |attrs| attrs[:tour_vehicles_attributes] = attrs[:tour_vehicles_attributes]
+                                                            .uniq{|attr| attr[:vehicle_id]} }
+    
   end
 
   def load_tour

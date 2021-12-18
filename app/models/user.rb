@@ -2,7 +2,7 @@
 #
 # Table name: users
 #
-#  id                     :bigint           not null, primary key
+#  id                     :integer          not null, primary key
 #  first_name             :string
 #  last_name              :string
 #  password_digest        :string
@@ -12,8 +12,8 @@
 #  birthday               :date
 #  activation_digest      :string
 #  activated_at           :datetime
-#  activated              :boolean          default(FALSE)
-#  admin                  :boolean          default(FALSE)
+#  activated              :boolean          default("false")
+#  admin                  :boolean          default("false")
 #  created_at             :datetime         not null
 #  updated_at             :datetime         not null
 #  reset_password_digest  :string
@@ -21,6 +21,12 @@
 #  provider               :string
 #  uid                    :string
 #
+# Indexes
+#
+#  index_users_on_email             (email) UNIQUE
+#  index_users_on_provider_and_uid  (provider,uid) UNIQUE
+#
+
 require 'open-uri'
 
 class User < ApplicationRecord

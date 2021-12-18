@@ -2,36 +2,43 @@
 #
 # Table name: tours
 #
-#  id            :bigint           not null, primary key
-#  kind          :integer
-#  name          :string
-#  description   :text
-#  time          :string
-#  limit         :integer
-#  departure_day :datetime
-#  terminal_day  :datetime
-#  price         :decimal(9, 2)
-#  created_at    :datetime         not null
-#  updated_at    :datetime         not null
+#  id          :integer          not null, primary key
+#  kind        :integer
+#  name        :string
+#  description :text
+#  time        :string
+#  limit       :integer
+#  begin_date  :datetime
+#  return_date :datetime
+#  price       :decimal(9, 2)
+#  departure   :string
+#  created_at  :datetime         not null
+#  updated_at  :datetime         not null
 #
+
 class Tour < ApplicationRecord
   include Rails.application.routes.url_helpers
   paginates_per Settings.tours_per
-  enum kind: { single: 1, fixed: 2 }, _suffix: :tour
+  enum kind: { single: 1, fixed: 2 }
   
   has_many_attached :images, dependent: :destroy
+  has_many :tour_vehicles, dependent: :destroy
+  has_many :vehicles, through: :tour_vehicles
+
+  accepts_nested_attributes_for :tour_vehicles, allow_destroy: true
 
   validates :name, presence: true, length: { maximum: 255}
+  validates :departure, presence: true
   validates :price, presence: true
-  validates :limit, presence: true, if: :fixed_tour?
-  validates :departure_day, presence: true, if: :fixed_tour?
-  validates :terminal_day, presence: true,
-                           if: :fixed_tour?
-  validates :time, presence: true, format:  /\A\d+\-\d+\z/, if: :single_tour?
-  validates :images, attached: true,
-                     content_type: [:png, :jpg, :jpeg, :gif],
-                     size:         { less_than: 45.megabytes},
-                     limit:        { min: 1, max: 9}
+  validates :limit, presence: true, if: :fixed?
+  validates :begin_date, presence: true, if: :fixed?
+  validates :return_date, presence: true, 
+                          comparison: { greater_than_or_equal_to: 
+                            Proc.new { |obj| obj.begin_date.to_datetime + 6.hours },
+                          message: "Return date must be greater six hours than begin date"},
+                          if: :fixed?
+  validates :time, presence: true, format:  /\A\d+\-\d+\z/, if: :single?
+ 
 
   def details
     case self.kind
@@ -40,8 +47,8 @@ class Tour < ApplicationRecord
     when "fixed"
       { 
         limit: self.limit,
-        departure_day: self.departure_day,
-        terminal_day: self.terminal_day
+        begin_date: self.begin_date,
+        return_date: self.return_date
       }
     else
       return

@@ -1,7 +1,7 @@
 class UsersController < ApplicationController
   before_action :load_user_by_email, only: [:reset_password]
-  before_action :load_user_by_id, only: [:destroy, :show]
-  before_action :correct_user, only: [:update, :change_password]
+  before_action :load_user_by_id, only: [:destroy]
+  before_action :correct_user, only: [:show, :update, :change_password]
   before_action :valid_user, only: [:reset_password]
   before_action :check_expiration, only: [:reset_password]
   
