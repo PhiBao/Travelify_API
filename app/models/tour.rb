@@ -34,7 +34,7 @@ class Tour < ApplicationRecord
   validates :begin_date, presence: true, if: :fixed?
   validates :return_date, presence: true, 
                           comparison: { greater_than_or_equal_to: 
-                            Proc.new { |obj| obj.begin_date.to_datetime + 6.hours },
+                            Proc.new { |obj| obj.begin_date + 6.hours },
                           message: "Return date must be greater six hours than begin date"},
                           if: :fixed?
   validates :time, presence: true, format:  /\A\d+\-\d+\z/, if: :single?

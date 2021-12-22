@@ -41,10 +41,9 @@ class ToursController < ApplicationController
 
   def tour_params
     params.permit(:name, :description, :time, :begin_date, :departure,
-                  :return_date, :price, :kind, :limit, images: [],
-                  tour_vehicles_attributes: [:id, :vehicle_id, '_destroy'])
-          .tap { |attrs| attrs[:tour_vehicles_attributes] = attrs[:tour_vehicles_attributes]
-                                                            .uniq{|attr| attr[:vehicle_id]} }
+                  :return_date, :price, :kind, :limit, :vehicles, images: [])
+          .tap{ |attrs| attrs['tour_vehicles_attributes'] =
+                JSON.parse(attrs.delete('vehicles')) }
     
   end
 

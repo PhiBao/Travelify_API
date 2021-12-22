@@ -2,7 +2,7 @@
 #
 # Table name: tours
 #
-#  id            :bigint           not null, primary key
+#  id            :bigint           snot null, primary key
 #  kind          :integer
 #  name          :string
 #  description   :text
@@ -17,6 +17,6 @@
 class TourBlueprint < Blueprinter::Base
   identifier :id
   fields :first_name, :last_name, :email, :kind, :name,
-         :details, :price, :description
+         :details, :price, :description, :departure
   field :images_data, name: :images
 end
