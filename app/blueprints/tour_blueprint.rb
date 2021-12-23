@@ -16,7 +16,16 @@
 #
 class TourBlueprint < Blueprinter::Base
   identifier :id
-  fields :first_name, :last_name, :email, :kind, :name,
-         :details, :price, :description, :departure
+  fields :name, :kind, :description, :departure,
+         :details, :price
   field :images_data, name: :images
+  field :vehicles_data, name: :vehicles
+
+  view :normal do
+    field :tags_data, name: :tags
+  end
+
+  view :created do
+    association :tags, blueprint: TagBlueprint
+  end
 end

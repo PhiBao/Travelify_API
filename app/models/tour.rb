@@ -24,8 +24,8 @@ class Tour < ApplicationRecord
   has_many_attached :images, dependent: :destroy
   has_many :tour_vehicles, dependent: :destroy
   has_many :vehicles, through: :tour_vehicles
-
-  accepts_nested_attributes_for :tour_vehicles, allow_destroy: true
+  has_many :tour_tags, dependent: :destroy
+  has_many :tags, through: :tour_tags
 
   validates :name, presence: true, length: { maximum: 255}
   validates :departure, presence: true
@@ -38,8 +38,29 @@ class Tour < ApplicationRecord
                           message: "Return date must be greater six hours than begin date"},
                           if: :fixed?
   validates :time, presence: true, format:  /\A\d+\-\d+\z/, if: :single?
- 
+  
+  # Accept nested attributes
+  def tour_tags_attributes=(array)
+    array.each do |item|
+      if item[:_destroy]
+        tour_tags.find(item[:id]).destroy
+      else
+        tour_tags.build(item)
+      end
+    end
+  end
 
+  def tour_vehicles_attributes=(array)
+    array.each do |item|
+      if item[:_destroy]
+        tour_vehicles.find(item[:id]).destroy
+      else
+        tour_vehicles.build(item)
+      end
+    end
+  end
+
+  # Serializers
   def details
     case self.kind
     when "single"
@@ -58,6 +79,18 @@ class Tour < ApplicationRecord
   def images_data
     return unless self.images.attached?
 
-    self.images.map{|img| ({ image: url_for(img) })}
+    self.images.map{ |img| ({ image: url_for(img) }) }
+  end
+
+  def vehicles_data
+    return [] unless self.vehicles.size == 0
+
+    self.vehicles.map{ |vehicle| vehicle.name }
+  end
+
+  def tags_data
+    return [] unless self.tags.size == 0
+
+    self.tags.map{ |tag| tag.name }
   end
 end

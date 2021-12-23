@@ -11,7 +11,7 @@ class ToursController < ApplicationController
     tour = Tour.new(tour_params)
 
     if tour.save
-      render json: tour, status: 201
+      render json: TourBlueprint.render(tour, root: :tour, view: :created), status: 201
     else
       render json: { messages: tour.errors.full_messages }, status: 400
     end
@@ -41,10 +41,11 @@ class ToursController < ApplicationController
 
   def tour_params
     params.permit(:name, :description, :time, :begin_date, :departure,
-                  :return_date, :price, :kind, :limit, :vehicles, images: [])
-          .tap{ |attrs| attrs['tour_vehicles_attributes'] =
-                JSON.parse(attrs.delete('vehicles')) }
-    
+                  :return_date, :price, :kind, :limit, :vehicles, :tags, images: [])
+          .tap do |attrs| 
+            attrs['tour_vehicles_attributes'] = JSON.parse(attrs.delete('vehicles')) 
+            attrs['tour_tags_attributes'] = JSON.parse(attrs.delete('tags')) 
+          end
   end
 
   def load_tour

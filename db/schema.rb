@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_12_18_103410) do
+ActiveRecord::Schema.define(version: 2021_12_23_051624) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -43,10 +43,21 @@ ActiveRecord::Schema.define(version: 2021_12_18_103410) do
     t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
   end
 
+  create_table "tags", force: :cascade do |t|
+    t.string "name"
+    t.index ["name"], name: "index_tags_on_name"
+  end
+
+  create_table "tour_tags", force: :cascade do |t|
+    t.integer "tag_id"
+    t.integer "tour_id"
+    t.index ["tour_id", "tag_id"], name: "index_tour_tags_on_tour_id_and_tag_id", unique: true
+  end
+
   create_table "tour_vehicles", force: :cascade do |t|
     t.integer "vehicle_id"
     t.integer "tour_id"
-    t.index ["tour_id", "vehicle_id"], name: "index_tour_vehicles_on_tour_id_and_vehicle_id"
+    t.index ["tour_id", "vehicle_id"], name: "index_tour_vehicles_on_tour_id_and_vehicle_id", unique: true
   end
 
   create_table "tours", force: :cascade do |t|

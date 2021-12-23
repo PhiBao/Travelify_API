@@ -8,7 +8,7 @@
 #
 # Indexes
 #
-#  index_tour_vehicles_on_tour_id_and_vehicle_id  (tour_id,vehicle_id)
+#  index_tour_vehicles_on_tour_id_and_vehicle_id  (tour_id,vehicle_id) UNIQUE
 #
 
 class TourVehicle < ApplicationRecord
@@ -16,5 +16,7 @@ class TourVehicle < ApplicationRecord
   belongs_to :tour
 
   validates :vehicle_id, presence: true
-  validates :tour_id, uniqueness: { scope: :vehicle, messages: "should have a defined vehicle"}
+  validates :tour, uniqueness: { allow_blank: false,
+                                 scope: :vehicle,
+                                 messages: "should have a defined vehicle" }
 end
