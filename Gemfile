@@ -56,4 +56,5 @@ group :development do
   gem 'letter_opener_web'
   gem 'dotenv-rails', '~> 2.7.6'
   gem 'annotate'
+  gem 'faker', :git => 'https://github.com/faker-ruby/faker.git', :branch => 'master'
 end
