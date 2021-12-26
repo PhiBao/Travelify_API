@@ -79,17 +79,17 @@ class Tour < ApplicationRecord
   def images_data
     return unless self.images.attached?
 
-    self.images.map{ |img| ({ image: url_for(img) }) }
+    self.images.map{ |img| (url_for(img)) }
   end
 
   def vehicles_data
-    return [] unless self.vehicles.size == 0
+    return [] if self.vehicles.size == 0
 
     self.vehicles.map{ |vehicle| vehicle.name }
   end
 
   def tags_data
-    return [] unless self.tags.size == 0
+    return [] if self.tags.size == 0
 
     self.tags.map{ |tag| tag.name }
   end

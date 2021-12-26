@@ -8,7 +8,9 @@
 #
 # Indexes
 #
+#  index_tour_vehicles_on_tour_id                 (tour_id)
 #  index_tour_vehicles_on_tour_id_and_vehicle_id  (tour_id,vehicle_id) UNIQUE
+#  index_tour_vehicles_on_vehicle_id              (vehicle_id)
 #
 
 class TourVehicle < ApplicationRecord

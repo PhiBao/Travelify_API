@@ -8,11 +8,13 @@
 #
 # Indexes
 #
+#  index_tour_tags_on_tag_id              (tag_id)
+#  index_tour_tags_on_tour_id             (tour_id)
 #  index_tour_tags_on_tour_id_and_tag_id  (tour_id,tag_id) UNIQUE
 #
 
 class TourTag < ApplicationRecord
-  belongs_to :tag
+  belongs_to :tag, counter_cache: true
   belongs_to :tour
 
   validates :tag_id, presence: true

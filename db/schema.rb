@@ -45,19 +45,24 @@ ActiveRecord::Schema.define(version: 2021_12_23_051624) do
 
   create_table "tags", force: :cascade do |t|
     t.string "name"
+    t.integer "tour_tags_count", default: 0
     t.index ["name"], name: "index_tags_on_name"
   end
 
   create_table "tour_tags", force: :cascade do |t|
     t.integer "tag_id"
     t.integer "tour_id"
+    t.index ["tag_id"], name: "index_tour_tags_on_tag_id"
     t.index ["tour_id", "tag_id"], name: "index_tour_tags_on_tour_id_and_tag_id", unique: true
+    t.index ["tour_id"], name: "index_tour_tags_on_tour_id"
   end
 
   create_table "tour_vehicles", force: :cascade do |t|
     t.integer "vehicle_id"
     t.integer "tour_id"
     t.index ["tour_id", "vehicle_id"], name: "index_tour_vehicles_on_tour_id_and_vehicle_id", unique: true
+    t.index ["tour_id"], name: "index_tour_vehicles_on_tour_id"
+    t.index ["vehicle_id"], name: "index_tour_vehicles_on_vehicle_id"
   end
 
   create_table "tours", force: :cascade do |t|
