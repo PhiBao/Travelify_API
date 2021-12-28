@@ -12,7 +12,7 @@ Rails.application.routes.draw do
     end
   end
   post 'sessions/social_auth/callback', to: 'sessions#social_create'
-  resources :tours, only: [:create, :update, :destroy, :index]
+  resources :tours, only: [:show, :create, :update, :destroy, :index]
   resources :helpers, only: [:index]
 
   mount LetterOpenerWeb::Engine, at: "/letters" if Rails.env.development?

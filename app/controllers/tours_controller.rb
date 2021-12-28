@@ -1,10 +1,26 @@
 class ToursController < ApplicationController
   before_action :admin_user, only: [:create, :update, :destroy]
-  before_action :load_tour, only: [:update, :destroy]
+  before_action :load_tour, only: [:show, :update, :destroy]
 
   def index
     Tour.order(paginate_params[:order])
         .page(paginate_params[:page])
+  end
+
+  def show
+    recently = params[:watched].split("-").map{ |id| Tour.find(id)}
+                               .reject { |x| x.id == @tour.id }
+                               .last(3) if params[:watched]
+    related = @tour.tags.map{ |tag| Tour.valid.includes(:tags)
+                   .where("tags.name": tag.name ).to_a }
+                   .flatten.uniq(&:id)
+                   .reject { |x| x.id == @tour.id }.sample(3)
+
+    render json: {
+      self: TourBlueprint.render_as_hash(@tour, view: :normal),
+      related: TourBlueprint.render_as_hash(related, view: :normal),
+      recently: recently ? TourBlueprint.render_as_hash(recently, view: :normal) : []
+    }, status: 200
   end
 
   def create

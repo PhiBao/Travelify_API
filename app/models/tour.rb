@@ -38,6 +38,7 @@ class Tour < ApplicationRecord
                           message: "Return date must be greater six hours than begin date"},
                           if: :fixed?
   validates :time, presence: true, format:  /\A\d+\-\d+\z/, if: :single?
+  scope :valid, -> {where("kind = 1 OR begin_date >= ?", Time.zone.now)}
   
   # Accept nested attributes
   def tour_tags_attributes=(array)

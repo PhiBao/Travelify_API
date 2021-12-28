@@ -1,13 +1,20 @@
 class StaticPagesController < ApplicationController
   
   def home
+    featured = Tour.valid.first
+    hot_tours = Tour.valid.take(9)
+    new_tours = Tour.valid.last(9)
+    list = ([].concat(hot_tours, new_tours).push(featured)).uniq(&:id)
+    hot_tags = Tag.popularity.first(6)
+    
     render json: { 
       data:
         { 
-          featured: TourBlueprint.render_as_hash(Tour.first, view: :normal),
-          hot_tours: TourBlueprint.render_as_hash(Tour.take(9), view: :normal),
-          new_tours: TourBlueprint.render_as_hash(Tour.last(9), view: :normal),
-          hot_tags: TagBlueprint.render_as_hash(Tag.popularity.first(6), view: :home)
+          list: TourBlueprint.render_as_hash(list, view: :normal),
+          featured: featured.id,
+          hot_tours: hot_tours.pluck(:id),
+          new_tours: new_tours.pluck(:id),
+          hot_tags: TagBlueprint.render_as_hash(hot_tags, view: :home)
         }
       }
   end

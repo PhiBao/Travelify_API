@@ -28,24 +28,25 @@ tagsArray = (1..10).to_a
 vehiclesArray = (1..3).to_a
 
 25.times do
+  rd = rand(3..7)
   tour = Tour.create!(
     name: Faker::JapaneseMedia::OnePiece.akuma_no_mi,
     description: Faker::Lorem.paragraph_by_chars(number: 256, supplemental: false),
     kind: "single",
-    time: "#{rand(3..7)}-#{rand(5..9)}",
+    time: "#{rd}-#{rd + rand(1..9)}",
     price: Faker::Number.decimal(l_digits: 3, r_digits: 2),
     departure: Faker::JapaneseMedia::OnePiece.island
   )
   tour.images.attach(
-    io: File.open(File.join(Rails.root,'app/assets/images/19-1-800x450.jpg')),
+    io: File.open(File.join(Rails.root, 'app/assets/images/19-1-800x450.jpg')),
     filename: 'file1.jpg'
   )
   tour.images.attach(
-    io: File.open(File.join(Rails.root,'app/assets/images/22-800x450.jpg')),
+    io: File.open(File.join(Rails.root, 'app/assets/images/22-800x450.jpg')),
     filename: 'file2.jpg'
   )
   tour.images.attach(
-    io: File.open(File.join(Rails.root,'app/assets/images/30-800x450.jpg')),
+    io: File.open(File.join(Rails.root, 'app/assets/images/30-800x450.jpg')),
     filename: 'file3.jpg'
   )
   rand(2..3).times do
@@ -65,23 +66,22 @@ end
     name: Faker::Games::Pokemon.name,
     description: Faker::Lorem.paragraph_by_chars(number: 256, supplemental: false),
     kind: "fixed",
-    time: "#{rand(3..7)}-#{rand(5..9)}",
     limit: Faker::Number.within(range: 10..50),
-    begin_date: Faker::Time.between_dates(from: Date.today - 1, to: Date.today, period: :morning),
-    return_date: Faker::Time.between_dates(from: Date.today + 1, to: Date.today + 10, period: :afternoon),
+    begin_date: Faker::Time.between_dates(from: Date.today + 1, to: Date.today + 2, period: :morning),
+    return_date: Faker::Time.between_dates(from: Date.today + 3, to: Date.today + 11, period: :afternoon),
     price: Faker::Number.decimal(l_digits: 3, r_digits: 2),
     departure: Faker::Games::Pokemon.location
   )
   tour.images.attach(
-    io: File.open(File.join(Rails.root,'app/assets/images/30-800x450.jpg')),
+    io: File.open(File.join(Rails.root, 'app/assets/images/30-800x450.jpg')),
     filename: 'file3.jpg'
   )
   tour.images.attach(
-    io: File.open(File.join(Rails.root,'app/assets/images/19-1-800x450.jpg')),
+    io: File.open(File.join(Rails.root, 'app/assets/images/19-1-800x450.jpg')),
     filename: 'file1.jpg'
   )
   tour.images.attach(
-    io: File.open(File.join(Rails.root,'app/assets/images/22-800x450.jpg')),
+    io: File.open(File.join(Rails.root, 'app/assets/images/22-800x450.jpg')),
     filename: 'file2.jpg'
   )
   rand(2..3).times do
