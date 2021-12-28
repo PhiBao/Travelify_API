@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_12_23_051624) do
+ActiveRecord::Schema.define(version: 2021_12_28_124433) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -20,7 +20,7 @@ ActiveRecord::Schema.define(version: 2021_12_23_051624) do
     t.string "record_type", null: false
     t.bigint "record_id", null: false
     t.bigint "blob_id", null: false
-    t.datetime "created_at", null: false
+    t.datetime "created_at", precision: 6, null: false
     t.index ["blob_id"], name: "index_active_storage_attachments_on_blob_id"
     t.index ["record_type", "record_id", "name", "blob_id"], name: "index_active_storage_attachments_uniqueness", unique: true
   end
@@ -33,7 +33,7 @@ ActiveRecord::Schema.define(version: 2021_12_23_051624) do
     t.string "service_name", null: false
     t.bigint "byte_size", null: false
     t.string "checksum", null: false
-    t.datetime "created_at", null: false
+    t.datetime "created_at", precision: 6, null: false
     t.index ["key"], name: "index_active_storage_blobs_on_key", unique: true
   end
 
@@ -41,6 +41,20 @@ ActiveRecord::Schema.define(version: 2021_12_23_051624) do
     t.bigint "blob_id", null: false
     t.string "variation_digest", null: false
     t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
+  end
+
+  create_table "bookings", force: :cascade do |t|
+    t.integer "tour_id"
+    t.integer "user_id"
+    t.integer "adults"
+    t.integer "children", default: 0
+    t.datetime "departure_date", precision: 6
+    t.decimal "total", precision: 9, scale: 2
+    t.integer "status"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["tour_id"], name: "index_bookings_on_tour_id"
+    t.index ["user_id"], name: "index_bookings_on_user_id"
   end
 
   create_table "tags", force: :cascade do |t|
@@ -75,6 +89,16 @@ ActiveRecord::Schema.define(version: 2021_12_23_051624) do
     t.datetime "return_date", precision: 6
     t.decimal "price", precision: 9, scale: 2
     t.string "departure"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
+  create_table "travellers", force: :cascade do |t|
+    t.integer "booking_id"
+    t.string "name"
+    t.string "email"
+    t.string "phone_number"
+    t.string "note"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
   end

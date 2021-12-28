@@ -37,6 +37,7 @@ class User < ApplicationRecord
   has_one_attached :avatar, dependent: :destroy do |attachable|
     attachable.variant :thumb, resize: "64x64"
   end
+  has_many :bookings, dependent: :nullify
 
   VALID_EMAIL_REGEX = /\A^(|(([A-Za-z0-9]+_+)|(\+)|([A-Za-z0-9]+\-+)|([A-Za-z0-9]+\.+)|([A-Za-z0-9]+\++))*[A-Za-z0-9]+@((\w+\-+)|(\w+\.))*\w{1,63}\.[a-zA-Z]{2,6})\z/
   validates :email, presence: true, uniqueness: true, format: VALID_EMAIL_REGEX

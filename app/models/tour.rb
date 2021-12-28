@@ -26,6 +26,7 @@ class Tour < ApplicationRecord
   has_many :vehicles, through: :tour_vehicles
   has_many :tour_tags, dependent: :destroy
   has_many :tags, through: :tour_tags
+  has_many :bookings, dependent: :nullify
 
   validates :name, presence: true, length: { maximum: 255}
   validates :departure, presence: true
@@ -38,7 +39,7 @@ class Tour < ApplicationRecord
                           message: "Return date must be greater six hours than begin date"},
                           if: :fixed?
   validates :time, presence: true, format:  /\A\d+\-\d+\z/, if: :single?
-  scope :valid, -> {where("kind = 1 OR begin_date >= ?", Time.zone.now)}
+  scope :valid, -> { where("kind = 1 OR begin_date >= ?", Time.zone.now) }
   
   # Accept nested attributes
   def tour_tags_attributes=(array)
