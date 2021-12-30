@@ -30,12 +30,12 @@ class Booking < ApplicationRecord
   validates :total, presence: true
   validates :adults, presence: true
   validates :children, presence: true
-  validates :departure_date
+  validates :departure_date, presence: true
   validates :status, presence: true
 
   # Create traveller while create boking
-  def traveller_attributes=(params)  
-    traveller.build(params)
+  def traveller_attributes=(hash)  
+    self.build_traveller(hash)
   end
 
   # Send confirmed mailer

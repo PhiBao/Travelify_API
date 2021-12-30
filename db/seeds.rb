@@ -24,6 +24,21 @@ Vehicle.create!(name: "boat")
 Vehicle.create!(name: "bus")
 Vehicle.create!(name: "airplane")
 
+tour = Tour.create!(
+  name: Faker::JapaneseMedia::OnePiece.akuma_no_mi,
+  description: Faker::Lorem.paragraph_by_chars(number: 1000, supplemental: false),
+  kind: "fixed",
+  limit: 69,
+  begin_date: Faker::Time.between_dates(from: Date.today + 10, to: Date.today + 12, period: :morning),
+  return_date: Faker::Time.between_dates(from: Date.today + 13, to: Date.today + 21, period: :afternoon),
+  price: Faker::Number.decimal(l_digits: 3, r_digits: 2),
+  departure: Faker::JapaneseMedia::OnePiece.island
+)
+tour.images.attach(
+  io: File.open(File.join(Rails.root, 'app/assets/images/夏夜の晨曦.jpg')),
+  filename: 'file1.jpg'
+)
+
 tagsArray = (1..10).to_a
 vehiclesArray = (1..3).to_a
 

@@ -218,7 +218,7 @@
                           <td align="left" valign="top"
                             style="font-family: Open Sans, Helvetica, Arial, sans-serif; font-size: 16px; font-weight: 400; line-height: 24px;">
                             <p style="font-weight: 800;">Estimated date</p>
-                            <p><%= @booking.kind == fixed ? date_formatter(@booking.return_date) : time_helper(@booking.time) %></p>
+                            <p><%= @booking.fixed? ? date_formatter(@booking.return_date) : time_helper(@booking.time) %></p>
                           </td>
                         </tr>
                       </table>

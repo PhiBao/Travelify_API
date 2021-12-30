@@ -2,7 +2,7 @@ module ApplicationHelper
   
   def time_helper time
     arr = time.split('/')
-    arr[0] + " Days " arr[1] + " Nights"
+    arr[0] + " Days " + arr[1] + " Nights"
   end
 
   def date_formatter date

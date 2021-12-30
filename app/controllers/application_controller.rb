@@ -1,4 +1,5 @@
 class ApplicationController < ActionController::API
+  include ActionController::MimeResponds
 
   def secret
     ENV['SECRET_KEY_BASE']

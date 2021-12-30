@@ -9,3 +9,11 @@ default: &default
 development:
   <<: *default
   database: travelify_development
+
+production:
+  adapter: postgresql
+  encoding: unicode
+  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+  database: travelify_production
+  username: travelify
+  password: <%= ENV['TRAVELIFY_DATABASE_PASSWORD'] %>

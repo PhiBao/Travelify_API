@@ -10,8 +10,8 @@ class BookingsController < ApplicationController
 
   private
 
-  def booking_parms
-    params.permit(:tour_id, :total, :adults, :children, :departure_date, :user_id,
+  def booking_params
+    params.require(:booking).permit(:tour_id, :total, :adults, :children, :departure_date, :user_id,
                   :status, traveller_attributes: [:name, :email, :phone_number, :note])
   end
 end
