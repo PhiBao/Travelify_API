@@ -4,30 +4,20 @@ class CheckoutController < ApplicationController
 
   def create
     num = checkout_params[:adults] + checkout_params[:children] / 2
-    
     if @tour.fixed? && ValidCheckout.call(@tour, num) == false
       render json: { messages: ['An unexpected error has occurred!'] }, status: 400
     end
-    line_items = [{
-      price: @tour.stripe_price_id,
-      quantity: num,
-    }]
-    @session = Stripe::Checkout::Session.create({
-      customer: current_user.stripe_customer_id,
-      payment_method_types: ['card'],
-      line_items: line_items,
-      metadata: {
-        adults: checkout_params[:adults],
-        children: checkout_params[:children],
-        departure_date: checkout_params[:departure_date]
+
+    intent = Stripe::PaymentIntent.create({
+      amount: checkout_params[:total].ceil(),
+      currency: 'usd',
+      metadata: checkout_params.merge(status: "paid").to_hash,
+      automatic_payment_methods: {
+        enabled: true,
       },
-      allow_promotion_codes: true,
-      mode: "payment",
-      success_url: success_url,
-      cancel_url: cancel_url,
     })
 
-    redirect_to @session.url, allow_other_host: true, status: 301
+    render json: {client_secret: intent.client_secret}, status: 200
   end
 
   def success
@@ -47,6 +37,6 @@ class CheckoutController < ApplicationController
   end
 
   def checkout_params
-    params.require(:checkout).permit(:tour_id, :children, :adults, :departure_date)
+    params.require(:checkout).permit(:tour_id, :children, :adults, :departure_date, :total, :user_id)
   end
 end

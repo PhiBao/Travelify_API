@@ -3,8 +3,9 @@ require "active_support/core_ext/integer/time"
 Rails.application.configure do
   # Settings specified here will take precedence over those in config/application.rb.
 
-  host = 'travelify.herokuapp.com'
+  host = 'travelify-api.herokuapp.com'
   config.action_mailer.default_url_options = { host: host, protocol: "https"}
+  Rails.application.routes.default_url_options = { host: host, protocol: "https" }
   config.action_mailer.perform_deliveries = true
   config.action_mailer.delivery_method = :smtp
   ActionMailer::Base.smtp_settings = {
@@ -17,7 +18,6 @@ Rails.application.configure do
     :enable_starttls_auto => true
   }
 
-
   # Code is not reloaded between requests.
   config.cache_classes = true
 
@@ -26,6 +26,10 @@ Rails.application.configure do
   # and those relying on copy on write to perform better.
   # Rake tasks automatically ignore this option for performance.
   config.eager_load = true
+
+  config.before_eager_load do
+    Rails.application.reload_routes!
+  end
 
   # Full error reports are disabled and caching is turned on.
   config.consider_all_requests_local       = false

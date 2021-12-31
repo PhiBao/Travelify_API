@@ -1,5 +1,5 @@
 class ToursController < ApplicationController
-  before_action :admin_user, only: [:create, :update, :destroy]
+  # before_action :admin_user, only: [:create, :update, :destroy]
   before_action :load_tour, only: [:show, :update, :destroy]
 
   def index

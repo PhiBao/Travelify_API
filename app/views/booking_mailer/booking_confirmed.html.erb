@@ -79,14 +79,14 @@
       <td align="center" style="background-color: #eeeeee;" bgcolor="#eeeeee">
         <table align="center" border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width:600px;">
           <tr>
-            <td align="center" valign="top" style="font-size:0; padding: 35px;" bgcolor="#F44336">
+            <td align="center" valign="top" style="font-size:0; padding: 35px;" bgcolor="#64b5f6">
               <div style="display:inline-block; max-width:50%; min-width:100px; vertical-align:top; width:100%;">
                 <table align="left" border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width:300px;">
                   <tr>
                     <td align="left" valign="top"
                       style="font-family: Open Sans, Helvetica, Arial, sans-serif; font-size: 36px; font-weight: 800; line-height: 48px;"
                       class="mobile-center">
-                      <h1 style="font-size: 36px; font-weight: 800; margin: 0; color: #ffffff;">BBBootstrap</h1>
+                      <h1 style="font-size: 36px; font-weight: 800; margin: 0; color: #ffffff;">Travelify</h1>
                     </td>
                   </tr>
                 </table>
@@ -102,12 +102,12 @@
                           <td
                             style="font-family: Open Sans, Helvetica, Arial, sans-serif; font-size: 18px; font-weight: 400;">
                             <p style="font-size: 18px; font-weight: 400; margin: 0; color: #ffffff;"><a href="#"
-                                target="_blank" style="color: #ffffff; text-decoration: none;">Shop &nbsp;</a></p>
+                                target="_blank" style="color: #ffffff; text-decoration: none;">More Fun &nbsp;</a></p>
                           </td>
                           <td
                             style="font-family: Open Sans, Helvetica, Arial, sans-serif; font-size: 18px; font-weight: 400; line-height: 24px;">
                             <a href="#" target="_blank" style="color: #ffffff; text-decoration: none;"><img
-                                src="https://img.icons8.com/color/48/000000/small-business.png" width="27" height="23"
+                                src="https://img.icons8.com/cute-clipart/100/000000/pokemon.png" width="27" height="23"
                                 style="display: block; border: 0px;" /></a> </td>
                         </tr>
                       </table>
@@ -126,7 +126,7 @@
                     <img src="https://img.icons8.com/carbon-copy/100/000000/checked-checkbox.png" width="125"
                       height="120" style="display: block; border: 0px;" /><br>
                     <h2 style="font-size: 30px; font-weight: 800; line-height: 36px; color: #333333; margin: 0;"> 
-                      ThankYou For Your Booking! 
+                      Thank You For Your Booking! 
                     </h2>
                   </td>
                 </tr>
@@ -146,8 +146,7 @@
                           style="font-family: Open Sans, Helvetica, Arial, sans-serif; font-size: 16px; font-weight: 800; line-height: 24px; padding: 10px;">
                           Order Confirmation # </td>
                         <td width="25%" align="left" bgcolor="#eeeeee"
-                          style="font-family: Open Sans, Helvetica, Arial, sans-serif; font-size: 16px; font-weight: 800; line-height: 24px; padding: 10px;">
-                          2345678 </td>
+                          style="font-family: Open Sans, Helvetica, Arial, sans-serif; font-size: 16px; font-weight: 800; line-height: 24px; padding: 10px;"></td>
                       </tr>
                       <tr>
                         <td width="75%" align="left"
@@ -163,7 +162,7 @@
                           Adults </td>
                         <td width="25%" align="left"
                           style="font-family: Open Sans, Helvetica, Arial, sans-serif; font-size: 16px; font-weight: 400; line-height: 24px; padding: 5px 10px;">
-                          <%= @booking.adults ></td>
+                          <%= @booking.adults %></td>
                       </tr>
                       <tr>
                         <td width="75%" align="left"
@@ -171,7 +170,7 @@
                           Children </td>
                         <td width="25%" align="left"
                           style="font-family: Open Sans, Helvetica, Arial, sans-serif; font-size: 16px; font-weight: 400; line-height: 24px; padding: 5px 10px;">
-                          <%= @booking.children > </td>
+                          <%= @booking.children %> </td>
                       </tr>
                     </table>
                   </td>
@@ -206,7 +205,7 @@
                           <td align="left" valign="top"
                             style="font-family: Open Sans, Helvetica, Arial, sans-serif; font-size: 16px; font-weight: 400; line-height: 24px;">
                             <p style="font-weight: 800;">Departure in</p>
-                            <p><%= @booking.departure %></p>
+                            <p><%= @booking.tour.departure %></p>
                           </td>
                         </tr>
                       </table>
@@ -218,7 +217,7 @@
                           <td align="left" valign="top"
                             style="font-family: Open Sans, Helvetica, Arial, sans-serif; font-size: 16px; font-weight: 400; line-height: 24px;">
                             <p style="font-weight: 800;">Estimated date</p>
-                            <p><%= @booking.fixed? ? date_formatter(@booking.return_date) : time_helper(@booking.time) %></p>
+                            <p><%= @booking.tour.fixed? ? date_formatter(@booking.tour.return_date) : time_helper(@booking.tour.time) %></p>
                           </td>
                         </tr>
                       </table>
@@ -231,7 +230,7 @@
           <tr>
           </tr>
           <tr>
-            <td align="center" style="padding: 35px; background-color: #ffffff;" bgcolor="#ffffff">
+            <td align="center" style="padding: 35px; background-color: #b39ddb;" bgcolor="#b39ddb">
               <table align="center" border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width:600px;">
                 <tr>
                   <td align="center"
@@ -245,8 +244,7 @@
                   <td align="left"
                     style="font-family: Open Sans, Helvetica, Arial, sans-serif; font-size: 14px; font-weight: 400; line-height: 24px;">
                     <p style="font-size: 14px; font-weight: 400; line-height: 20px; color: #777777;"> If you didn't
-                      create an account using this email address, please ignore this email or <a href="#"
-                        target="_blank" style="color: #777777;">unsusbscribe</a>. </p>
+                      create an account using this email address, please ignore this email or <a href="#" target="_blank" style="color: #777777;">unsusbscribe</a>. </p>
                   </td>
                 </tr>
               </table>

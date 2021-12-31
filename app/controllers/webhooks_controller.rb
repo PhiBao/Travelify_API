@@ -1,5 +1,4 @@
 class WebhooksController < ApplicationController
-  skip_before_action :verify_authenticity_token
 
   def create
     payload = request.body.read
@@ -22,13 +21,9 @@ class WebhooksController < ApplicationController
 
     # Handle the event
     case event.type
-    when "checkout.session.completed"
-      session = event.data.object
-      session_with_expand = Stripe::Checkout::Session.retrieve({ id: session.id, expand: ["line_items", "metadata"]})
-      session_with_expand.line_items.data.each do |line_item|
-        tour = Tour.find_by(stripe_product_id: line_item.price.product)
-        BookingSuccess.call(tour, session_with_expand.metadata)
-      end
+    when "payment_intent.succeeded"
+      intent = Stripe::PaymentIntent.retrieve({ id: event.data.object.id })
+      BookingSuccess.call(intent.metadata)
     end
 
     render json: { ok: true }

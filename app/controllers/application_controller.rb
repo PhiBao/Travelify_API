@@ -52,6 +52,8 @@ class ApplicationController < ActionController::API
   end
 
   def admin_user
-    current_user&.admin?
+    unless current_user&.admin?
+      render json: { messages: ['You do not have the right to do this action'] }, status: 401
+    end
   end
 end

@@ -1,22 +1,15 @@
 class BookingSuccess < ApplicationService
-  attr_reader :tour, :metadata
+  attr_reader :metadata
 
-  def initialize(tour, booking)
-    @tour = tour
+  def initialize(metadata)
     @metadata = metadata
   end
 
   def call
-    tour = Tour.find(@booking.tour_id)
-    num = @metadata.adults + @metadata.children / 2
-    tour.update!(quantity: @tour.quantity + num)
-    booking = Booking.create!(user_id: current_user.id,
-                    tour_id: @tour.id,
-                    adults: @metadata.adults,
-                    children: @metadata.children,
-                    departure_date: @metadata.departure_date,
-                    status: "paid",
-                    total: num * @tour.price)
+    tour = Tour.find(@metadata.tour_id)
+    num = (@metadata.adults.to_i * 100.0 + @metadata.children.to_i * 100.0 / 2) / 100.0
+    tour.update!(quantity: tour.quantity + num)
+    booking = Booking.create!(@metadata.to_hash)
     booking.send_confirmed_mailer
   end
 end

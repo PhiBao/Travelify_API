@@ -20,7 +20,6 @@
 #  reset_password_sent_at :datetime
 #  provider               :string
 #  uid                    :string
-#  stripe_customer_id     :string
 #
 # Indexes
 #
@@ -45,11 +44,6 @@ class User < ApplicationRecord
   validates :address, length: { maximum: 100 }
   validates :avatar, content_type: [:png, :jpg, :jpeg, :gif],
                      size:         { less_than: 5.megabytes }
-
-  after_create do
-    customer = Stripe::Customer.create(email: email)
-    update(stripe_customer_id: customer.id)
-  end
 
   def User.digest(string)
     cost = ActiveModel::SecurePassword.min_cost ? BCrypt::Engine::MIN_COST :

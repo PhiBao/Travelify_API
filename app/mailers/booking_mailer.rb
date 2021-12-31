@@ -3,7 +3,7 @@ class BookingMailer < ApplicationMailer
     @booking = booking
     
     mail(
-      to: @booking.user.email
+      to: @booking.user.email,
       subject: "Booking Confirmed "
     )
   end

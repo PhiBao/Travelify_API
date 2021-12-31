@@ -6,6 +6,6 @@ module ApplicationHelper
   end
 
   def date_formatter date
-    (date + 7.hours).strftime("%a, &b %d, %y %H:%M")
+    (date + 7.hours).strftime("%a, %b %d, %y %H:%M")
   end
 end

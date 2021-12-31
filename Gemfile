@@ -26,14 +26,13 @@ gem 'bcrypt', '~> 3.1.7'
 
 gem 'jwt', '~> 2.3.0'
 gem 'blueprinter'
-gem 'sidekiq'
+gem 'sidekiq', '~> 5.2.8'
 gem 'aws-sdk-s3', require: false
 gem 'kaminari'
 gem 'config'
 gem 'oj'
 gem 'active_storage_validations'
 gem 'stripe'
-gem "money-rails"
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
 gem "tzinfo-data", platforms: %i[ mingw mswin x64_mingw jruby ]

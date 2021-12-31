@@ -2,21 +2,19 @@
 #
 # Table name: tours
 #
-#  id                :integer          not null, primary key
-#  kind              :integer
-#  name              :string
-#  description       :text
-#  time              :string
-#  limit             :integer
-#  begin_date        :datetime
-#  return_date       :datetime
-#  price             :integer
-#  departure         :string
-#  created_at        :datetime         not null
-#  updated_at        :datetime         not null
-#  quantity          :decimal(2, 1)    default("0.0")
-#  stripe_price_id   :string
-#  stripe_product_id :string
+#  id          :integer          not null, primary key
+#  kind        :integer
+#  name        :string
+#  description :text
+#  time        :string
+#  quantity    :decimal(3, 1)    default("0.0")
+#  limit       :integer
+#  begin_date  :datetime
+#  return_date :datetime
+#  price       :decimal(9, 2)
+#  departure   :string
+#  created_at  :datetime         not null
+#  updated_at  :datetime         not null
 #
 
 class Tour < ApplicationRecord
@@ -33,7 +31,7 @@ class Tour < ApplicationRecord
 
   validates :name, presence: true, length: { maximum: 255}
   validates :departure, presence: true
-  validates :price, presence: true, numericality: { greater_than: 0, less_than: 10000000 }
+  validates :price, presence: true, numericality: { greater_than: 0, less_than: 1000000 }
   validates :limit, presence: true, if: :fixed?
   validates :begin_date, presence: true, if: :fixed?
   validates :return_date, presence: true, 
@@ -42,16 +40,9 @@ class Tour < ApplicationRecord
                           message: "Return date must be greater six hours than begin date"},
                           if: :fixed?
   validates :time, presence: true, format:  /\A\d+\-\d+\z/, if: :single?
+  validates :images, content_type: [:png, :jpg, :jpeg, :gif],
+                     size: { less_than: 45.megabytes }, limit: { max: 9 }
   scope :valid, -> { where("kind = 1 OR begin_date >= ?", Time.zone.now) }
-
-  # For stripe
-  monetize :price, as: :price_cents
-
-  after_create do
-    product = Stripe::Product.create(name: self.name)
-    price = Stripe::Price.create(product: product, unit_amount: self.price, currency: 'usd')
-    update(stripe_product_id: product.id, stripe_price_id: price.id)
-  end
   
   # Accept nested attributes
   def tour_tags_attributes=(array)
@@ -93,7 +84,7 @@ class Tour < ApplicationRecord
 
   def images_data
     return unless self.images.attached?
-
+    
     self.images.map{ |img| (url_for(img)) }
   end
 
