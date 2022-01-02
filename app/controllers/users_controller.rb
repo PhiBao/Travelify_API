@@ -42,9 +42,7 @@ class UsersController < ApplicationController
   end
 
   def destroy
-    if @user.destroy
-      render json: { ok: true }, status: 200
-    else
+    unless @user.destroy
       render json: { messages: @user.errors.full_messages }, status: 400
     end
   end
@@ -71,7 +69,6 @@ class UsersController < ApplicationController
       render json: { messages: ["password is empty"] }, status: 400
     elsif @user.update(reset_password_params)                    
       @user.update(reset_password_digest: nil)
-      render json: { ok: true }, status: 200
     else
       render json: { messages: ["password is invalid"] }, status: 400
     end
@@ -83,9 +80,7 @@ class UsersController < ApplicationController
           change_password_params[:password_confirmation])
         render json: {messages: ["Password and password confirmation is not the same."]}, status: 400
       else
-        if @user.update(password: change_password_params[:new_password])
-          render json: {ok: true}, status: 200
-        else
+        unless @user.update(password: change_password_params[:new_password])
           render json: {messages: ["Password is invalid."]}, status: 400
         end
       end

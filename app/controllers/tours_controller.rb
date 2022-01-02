@@ -1,6 +1,7 @@
 class ToursController < ApplicationController
   # before_action :admin_user, only: [:create, :update, :destroy]
-  before_action :load_tour, only: [:show, :update, :destroy]
+  before_action :load_tour, only: [:show, :update, :destroy, :rating]
+  before_action :logged_in_user, only: [:rating]
 
   def index
     Tour.order(paginate_params[:order])
@@ -42,10 +43,18 @@ class ToursController < ApplicationController
   end
 
   def destroy
-    if @tour.destroy
-      render json: { ok: true }, status: 200
-    else
+    unless @tour.destroy
       render json: { messages: @tour.errors.full_messages }, status: 400
+    end
+  end
+
+  def rating
+    act = Action.rating.find_by(user_id: current_user.id, target_id: @tour.id)
+ 
+    if act.present?
+      act.update data: action_params[:data].to_s
+    else
+      Action.rating.create!(target: @tour, user_id: current_user.id, data: action_params[:data])
     end
   end
 
@@ -62,6 +71,10 @@ class ToursController < ApplicationController
             attrs['tour_vehicles_attributes'] = JSON.parse(attrs.delete('vehicles')) 
             attrs['tour_tags_attributes'] = JSON.parse(attrs.delete('tags')) 
           end
+  end
+
+  def action_params
+    params.require(:rating).permit(:data)
   end
 
   def load_tour

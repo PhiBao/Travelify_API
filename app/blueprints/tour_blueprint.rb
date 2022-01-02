@@ -17,7 +17,7 @@
 class TourBlueprint < Blueprinter::Base
   identifier :id
   fields :name, :kind, :description, :departure,
-         :details, :price
+         :details, :price, :rate
   field :images_data, name: :images
   field :vehicles_data, name: :vehicles
 

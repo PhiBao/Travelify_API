@@ -25,7 +25,5 @@ class WebhooksController < ApplicationController
       intent = Stripe::PaymentIntent.retrieve({ id: event.data.object.id })
       BookingSuccess.call(intent.metadata)
     end
-
-    render json: { ok: true }
   end
 end

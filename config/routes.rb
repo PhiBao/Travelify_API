@@ -12,13 +12,15 @@ Rails.application.routes.draw do
     end
   end
   post 'sessions/social_auth/callback', to: 'sessions#social_create'
-  resources :tours,     only: [:show, :create, :update, :destroy, :index]
+  resources :tours,     only: [:show, :create, :update, :destroy, :index] do
+    member do
+      post 'rating'
+    end
+  end
   resources :helpers,   only: [:index]
   resources :bookings,  only: [:create]
   post '/checkout',     to: 'checkout#create'
   resources :webhooks,  only: :create
-  get '/success',       to: 'checkout#success'
-  get '/cancel',        to: 'checkout#cancel'
 
   mount LetterOpenerWeb::Engine, at: '/letters' if Rails.env.development?
 end

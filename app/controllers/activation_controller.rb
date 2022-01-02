@@ -9,14 +9,12 @@ class ActivationController < ApplicationController
     else
       @user.create_activation_digest
       @user.send_activation_email
-      render json: { ok: true }, status: 200
     end
   end
 
   def update
     if @user.activate                  
       @user.update(activation_digest: nil)
-      render json: { ok: true }, status: 200
     else
       render json: { messages: ["Something go wrong, please try again"] }, status: 400
     end

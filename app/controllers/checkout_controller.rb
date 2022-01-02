@@ -4,7 +4,7 @@ class CheckoutController < ApplicationController
 
   def create
     num = checkout_params[:adults] + checkout_params[:children] / 2
-    if @tour.fixed? && ValidCheckout.call(@tour, num) == false
+    if @tour.fixed? && !ValidCheckout.call(@tour, num)
       render json: { messages: ['An unexpected error has occurred!'] }, status: 400
     end
 
@@ -17,15 +17,7 @@ class CheckoutController < ApplicationController
       },
     })
 
-    render json: {client_secret: intent.client_secret}, status: 200
-  end
-
-  def success
-    render json: { ok: true }, status: 200
-  end
-
-  def cancel
-    render json: { messages: ['An unexpected error has occurred!'] }, status: 403
+    render json: { client_secret: intent.client_secret }, status: 200
   end
 
   private

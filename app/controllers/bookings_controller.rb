@@ -1,10 +1,8 @@
 class BookingsController < ApplicationController
   def create
     @booking = Booking.create(booking_params)
-    if @booking.save
-      render json: {ok: true}, status: 200
-    else
-      render json: {messages: ["A error has occurred"]}, status: 403
+    unless @booking.save
+      render json: {messages: ["A error has occurred"]}, status: 400
     end
   end
 
