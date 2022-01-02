@@ -34,11 +34,13 @@ class User < ApplicationRecord
   has_secure_password
   attr_accessor :activation_token, :reset_password_token
   before_save   :downcase_email
+  
   has_one_attached :avatar, dependent: :destroy do |attachable|
     attachable.variant :thumb, resize: "64x64"
   end
   has_many :bookings, dependent: :nullify
   has_many :actions, dependent: :nullify
+  has_many :reviews, dependent: :nullify
 
   validates :email, presence: true, uniqueness: true, format: VALID_EMAIL_REGEX
   validates :phone_number, numericality: { only_integer: true }, length: { minimum: 9, maximum: 11 }, allow_blank: true

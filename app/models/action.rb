@@ -7,7 +7,6 @@
 #  scope       :integer
 #  target_type :string
 #  target_id   :integer
-#  data        :string
 #  created_at  :datetime         not null
 #  updated_at  :datetime         not null
 #
@@ -18,14 +17,11 @@
 #
 
 class Action < ApplicationRecord
-  enum scope: { like: 1, dislike: 2, rating: 3, mark: 4 }
+  enum scope: { upvote: 1, downvote: 2, mark: 3 }
 
   belongs_to :target, polymorphic: true
   belongs_to :user
 
-  validates :user_id, presence: true
   validates :scope, presence: true
-  validates :target_type, presence: true
-  validates :target_id, presence: true
-  validates :data, presence: true, if: :rating?
+  validates :user, uniqueness: { scope: :target }, if: Proc.new { |obj| obj.mark? || (obj.upvote? || obj.downvote?) }
 end

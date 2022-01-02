@@ -1,7 +1,7 @@
 class ToursController < ApplicationController
   # before_action :admin_user, only: [:create, :update, :destroy]
-  before_action :load_tour, only: [:show, :update, :destroy, :rating]
-  before_action :logged_in_user, only: [:rating]
+  before_action :load_tour, only: [:show, :update, :destroy, :mark]
+  before_action :logged_in_user, only: [:mark]
 
   def index
     Tour.order(paginate_params[:order])
@@ -9,18 +9,21 @@ class ToursController < ApplicationController
   end
 
   def show
-    recently = params[:watched].split("-").map{ |id| Tour.find(id)}
+    recently = params[:watched].split("-").compact_blank
+                               .map{ |id| Tour.find(id)}
                                .reject { |x| x.id == @tour.id }
                                .last(3) if params[:watched]
     related = @tour.tags.map{ |tag| Tour.valid.includes(:tags)
                    .where("tags.name": tag.name ).to_a }
                    .flatten.uniq(&:id)
                    .reject { |x| x.id == @tour.id }.sample(3)
+    list = ([].concat(recently, related).push(@tour)).uniq(&:id)
 
     render json: {
-      self: TourBlueprint.render_as_hash(@tour, view: :normal),
-      related: TourBlueprint.render_as_hash(related, view: :normal),
-      recently: recently ? TourBlueprint.render_as_hash(recently, view: :normal) : []
+      list: TourBlueprint.render_as_hash(list, view: :normal, user_id: current_user&.id),
+      self: @tour.id,
+      related: related.pluck(:id),
+      recently: recently ? recently.pluck(:id) : []
     }, status: 200
   end
 
@@ -48,14 +51,16 @@ class ToursController < ApplicationController
     end
   end
 
-  def rating
-    act = Action.rating.find_by(user_id: current_user.id, target_id: @tour.id)
+  def mark
+    act = @tour.actions.mark.find_by(user_id: current_user.id)
  
     if act.present?
-      act.update data: action_params[:data].to_s
+      act.destroy!
     else
-      Action.rating.create!(target: @tour, user_id: current_user.id, data: action_params[:data])
+      @tour.actions.mark.create!(user_id: current_user.id)
     end
+
+    render json: { id: @tour.id }, status: 200
   end
 
   private

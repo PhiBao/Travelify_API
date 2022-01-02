@@ -5,8 +5,7 @@ class CreateActions < ActiveRecord::Migration[7.0]
       t.integer :scope
       t.string :target_type
       t.integer :target_id
-      t.string :data
-
+      
       t.timestamps
     end
 

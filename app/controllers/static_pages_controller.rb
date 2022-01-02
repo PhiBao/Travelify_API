@@ -10,7 +10,7 @@ class StaticPagesController < ApplicationController
     render json: { 
       data:
         { 
-          list: TourBlueprint.render_as_hash(list, view: :normal),
+          list: TourBlueprint.render_as_hash(list, view: :normal, user_id: current_user&.id),
           featured: featured.pluck(:id),
           hot_tours: hot_tours.pluck(:id),
           new_tours: new_tours.pluck(:id),

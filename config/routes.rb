@@ -14,7 +14,7 @@ Rails.application.routes.draw do
   post 'sessions/social_auth/callback', to: 'sessions#social_create'
   resources :tours,     only: [:show, :create, :update, :destroy, :index] do
     member do
-      post 'rating'
+      get 'mark'
     end
   end
   resources :helpers,   only: [:index]

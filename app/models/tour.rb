@@ -29,6 +29,7 @@ class Tour < ApplicationRecord
   has_many :tags, through: :tour_tags
   has_many :bookings, dependent: :nullify
   has_many :actions, as: :target, dependent: :destroy
+  has_many :reviews, dependent: :destroy
 
   validates :name, presence: true, length: { maximum: 255}
   validates :departure, presence: true
@@ -102,7 +103,7 @@ class Tour < ApplicationRecord
   end
 
   def rate
-    return 0 unless self.actions.rating.size > 0
-    self.actions.rating.map{ |x| x.data.to_f }.sum() / self.actions.rating.size
+    return 0 unless self.reviews.size > 0
+    self.reviews.sum(:hearts) / self.reviews.size
   end
 end

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_01_02_024512) do
+ActiveRecord::Schema.define(version: 2022_01_02_113447) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -20,7 +20,6 @@ ActiveRecord::Schema.define(version: 2022_01_02_024512) do
     t.integer "scope"
     t.string "target_type"
     t.integer "target_id"
-    t.string "data"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["target_type", "target_id"], name: "index_actions_on_target_type_and_target_id"
@@ -67,6 +66,18 @@ ActiveRecord::Schema.define(version: 2022_01_02_024512) do
     t.datetime "updated_at", precision: 6, null: false
     t.index ["tour_id"], name: "index_bookings_on_tour_id"
     t.index ["user_id"], name: "index_bookings_on_user_id"
+  end
+
+  create_table "reviews", force: :cascade do |t|
+    t.integer "user_id"
+    t.integer "tour_id"
+    t.integer "hearts"
+    t.text "body"
+    t.boolean "state", default: true
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["tour_id"], name: "index_reviews_on_tour_id"
+    t.index ["user_id"], name: "index_reviews_on_user_id"
   end
 
   create_table "tags", force: :cascade do |t|

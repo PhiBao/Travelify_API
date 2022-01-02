@@ -20,6 +20,9 @@ class TourBlueprint < Blueprinter::Base
          :details, :price, :rate
   field :images_data, name: :images
   field :vehicles_data, name: :vehicles
+  field(:marked, if: ->(_field_name, _tour, options) { options[:user_id].present? }) do |tour, options|
+    tour.actions.mark.find_by(user_id: options[:user_id]).present?
+  end
 
   view :normal do
     field :tags_data, name: :tags
