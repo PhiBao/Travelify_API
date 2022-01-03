@@ -21,6 +21,11 @@ Rails.application.routes.draw do
   resources :bookings,  only: [:create]
   post '/checkout',     to: 'checkout#create'
   resources :webhooks,  only: :create
+  resources :reviews,   only: [:create] do
+    member do
+      get 'like'
+    end
+  end
 
   mount LetterOpenerWeb::Engine, at: '/letters' if Rails.env.development?
 end

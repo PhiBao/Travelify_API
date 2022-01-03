@@ -23,7 +23,21 @@
 #
 class UserBlueprint < Blueprinter::Base
   identifier :id
-  fields :first_name, :last_name, :email, :phone_number,
+  field :avatar_url
+
+  view :full do
+    fields :first_name, :last_name, :email, :phone_number,
          :address, :birthday, :activated, :admin, :created_at
-  field :avatar_data, name: :avatar
+  end
+
+  view :short do
+    field :username do |user|
+      if user.full_name.blank?
+        user.email
+      else
+        user.full_name
+      end
+    end
+  end
+  
 end

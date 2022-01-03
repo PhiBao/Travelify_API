@@ -1,19 +1,3 @@
-# == Schema Information
-#
-# Table name: tours
-#
-#  id            :bigint           snot null, primary key
-#  kind          :integer
-#  name          :string
-#  description   :text
-#  time          :string
-#  limit         :integer
-#  begin_date :datetime
-#  return_date  :datetime
-#  price         :decimal(9, 2)
-#  created_at    :datetime         not null
-#  updated_at    :datetime         not null
-#
 class TourBlueprint < Blueprinter::Base
   identifier :id
   fields :name, :kind, :description, :departure,
@@ -30,5 +14,10 @@ class TourBlueprint < Blueprinter::Base
 
   view :created do
     association :tags, blueprint: TagBlueprint
+  end
+
+  view :detail do
+    include_view :normal
+    association :reviews, blueprint: ReviewBlueprint
   end
 end

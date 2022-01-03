@@ -16,7 +16,7 @@ class UsersController < ApplicationController
       token = encode(payload)
       user.create_activation_digest
       user.send_activation_email
-      render json: { user: UserBlueprint.render_as_hash(user),
+      render json: { user: UserBlueprint.render_as_hash(user, view: :full),
                      token: token }, status: 201
     else 
       render json: { messages: user.errors.full_messages }, status: 404
@@ -24,7 +24,7 @@ class UsersController < ApplicationController
   end
 
   def show
-    render json: UserBlueprint.render(@user, root: :user), status: 200
+    render json: UserBlueprint.render(@user, root: :user, view: :full), status: 200
   end
 
   def update
@@ -35,7 +35,7 @@ class UsersController < ApplicationController
     end
 
     if @user.update(user_obj)
-      render json: UserBlueprint.render(@user, root: :user), status: 200
+      render json: UserBlueprint.render(@user, root: :user, view: :full), status: 200
     else
       render json: { messages: @user.errors.full_messages }, status: 400
     end

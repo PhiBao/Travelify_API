@@ -59,16 +59,12 @@ class User < ApplicationRecord
     SecureRandom.urlsafe_base64
   end
 
-  def avatar_data
-    return unless self.avatar.attached?
-
-    self.avatar.blob.attributes
-          .slice('filename', 'byte_size')
-          .merge(url: avatar_url)
-          .tap { |attrs| attrs['name'] = attrs.delete('filename')}
+  def full_name
+    "#{self.first_name || ""} #{self.last_name || ""}"
   end
 
   def avatar_url
+    return unless self.avatar.attached?
     url_for(self.avatar)
   end
   

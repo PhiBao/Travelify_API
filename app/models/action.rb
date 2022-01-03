@@ -17,11 +17,11 @@
 #
 
 class Action < ApplicationRecord
-  enum scope: { upvote: 1, downvote: 2, mark: 3 }
+  enum scope: { like: 1, mark: 2 }
 
   belongs_to :target, polymorphic: true
   belongs_to :user
 
   validates :scope, presence: true
-  validates :user, uniqueness: { scope: :target }, if: Proc.new { |obj| obj.mark? || (obj.upvote? || obj.downvote?) }
+  validates :user, uniqueness: { scope: :target }, if: Proc.new { |obj| obj.mark? || obj.like? }
 end

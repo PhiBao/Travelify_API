@@ -9,19 +9,23 @@ class ToursController < ApplicationController
   end
 
   def show
-    recently = params[:watched].split("-").compact_blank
-                               .map{ |id| Tour.find(id)}
-                               .reject { |x| x.id == @tour.id }
-                               .last(3) if params[:watched]
+    if params[:watched]
+      recently = params[:watched].split("-").compact_blank
+                                .map{ |id| Tour.find(id)}
+                                .reject { |x| x.id == @tour.id }
+                                .last(3)
+    else
+      recently = []
+    end
     related = @tour.tags.map{ |tag| Tour.valid.includes(:tags)
                    .where("tags.name": tag.name ).to_a }
                    .flatten.uniq(&:id)
                    .reject { |x| x.id == @tour.id }.sample(3)
-    list = ([].concat(recently, related).push(@tour)).uniq(&:id)
+    list = ([].concat(recently, related)).uniq(&:id)
 
     render json: {
       list: TourBlueprint.render_as_hash(list, view: :normal, user_id: current_user&.id),
-      self: @tour.id,
+      self: TourBlueprint.render_as_hash(@tour, view: :detail, user_id: current_user&.id),
       related: related.pluck(:id),
       recently: recently ? recently.pluck(:id) : []
     }, status: 200

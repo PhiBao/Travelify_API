@@ -25,6 +25,7 @@ class Tag < ApplicationRecord
   scope :popularity, -> { order(tour_tags_count: :desc) }                        
 
   def illustration_url
+    return unless self.illustration.attached?
     url_for(self.illustration)
   end
 end
