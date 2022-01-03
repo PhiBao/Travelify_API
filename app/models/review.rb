@@ -18,6 +18,7 @@
 #
 
 class Review < ApplicationRecord
+  paginates_per Settings.reviews_per
   enum state: { appear: true, hide: false }
 
   belongs_to :user

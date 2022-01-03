@@ -1,5 +1,5 @@
 class ToursController < ApplicationController
-  # before_action :admin_user, only: [:create, :update, :destroy]
+  before_action :admin_user, only: [:create, :update, :destroy]
   before_action :load_tour, only: [:show, :update, :destroy, :mark]
   before_action :logged_in_user, only: [:mark]
 
@@ -24,8 +24,8 @@ class ToursController < ApplicationController
     list = ([].concat(recently, related)).uniq(&:id)
 
     render json: {
-      list: TourBlueprint.render_as_hash(list, view: :normal, user_id: current_user&.id),
-      self: TourBlueprint.render_as_hash(@tour, view: :detail, user_id: current_user&.id),
+      list: TourBlueprint.render_as_hash(list, view: :normal, user: current_user),
+      self: TourBlueprint.render_as_hash(@tour, view: :detail, user: current_user),
       related: related.pluck(:id),
       recently: recently ? recently.pluck(:id) : []
     }, status: 200

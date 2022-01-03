@@ -45,6 +45,8 @@ class Tour < ApplicationRecord
   validates :images, content_type: [:png, :jpg, :jpeg, :gif],
                      size: { less_than: 45.megabytes }, limit: { max: 9 }
   scope :valid, -> { where("kind = 1 OR begin_date >= ?", Time.zone.now) }
+  scope :hot, -> { left_joins(:bookings).group("tours.id").order('sum(bookings.total) desc') }
+  scope :favorite, -> { left_joins(:reviews).group("tours.id").order('sum(reviews.hearts) desc') }
   
   # Accept nested attributes
   def tour_tags_attributes=(array)

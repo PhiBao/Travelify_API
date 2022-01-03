@@ -4,8 +4,8 @@ class TourBlueprint < Blueprinter::Base
          :details, :price, :rate
   field :images_data, name: :images
   field :vehicles_data, name: :vehicles
-  field(:marked, if: ->(_field_name, _tour, options) { options[:user_id].present? }) do |tour, options|
-    tour.actions.mark.find_by(user_id: options[:user_id]).present?
+  field(:marked, if: ->(_field_name, _tour, options) { options[:user].present? }) do |tour, options|
+    tour.actions.mark.find_by(user_id: options[:user].id).present?
   end
 
   view :normal do
@@ -18,6 +18,12 @@ class TourBlueprint < Blueprinter::Base
 
   view :detail do
     include_view :normal
-    association :reviews, blueprint: ReviewBlueprint
+    association :reviews, blueprint: ReviewBlueprint do |tour, options|
+      if options[:user]&.admin
+        tour.reviews.page(1)
+      else
+        tour.reviews.appear.page(1)
+      end
+    end
   end
 end

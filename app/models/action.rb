@@ -9,6 +9,7 @@
 #  target_id   :integer
 #  created_at  :datetime         not null
 #  updated_at  :datetime         not null
+#  content     :string
 #
 # Indexes
 #
@@ -17,7 +18,7 @@
 #
 
 class Action < ApplicationRecord
-  enum scope: { like: 1, mark: 2 }
+  enum scope: { like: 1, mark: 2, report: 3 }
 
   belongs_to :target, polymorphic: true
   belongs_to :user

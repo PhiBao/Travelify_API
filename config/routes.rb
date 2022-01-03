@@ -21,9 +21,12 @@ Rails.application.routes.draw do
   resources :bookings,  only: [:create]
   post '/checkout',     to: 'checkout#create'
   resources :webhooks,  only: :create
-  resources :reviews,   only: [:create] do
+  resources :reviews,   only: [:create, :destroy] do
     member do
       get 'like'
+      post 'report'
+      get 'hide'
+      get 'appear'
     end
   end
 
