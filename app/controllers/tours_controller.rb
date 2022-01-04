@@ -1,6 +1,6 @@
 class ToursController < ApplicationController
   before_action :admin_user, only: [:create, :update, :destroy]
-  before_action :load_tour, only: [:show, :update, :destroy, :mark]
+  before_action :load_tour, only: [:show, :update, :destroy, :mark, :reviews]
   before_action :logged_in_user, only: [:mark]
 
   def index
@@ -65,6 +65,18 @@ class ToursController < ApplicationController
     end
 
     render json: { id: @tour.id }, status: 200
+  end
+
+  def reviews
+    if params[:page].present?
+      if current_user&.admin?
+        render json: ReviewBlueprint.render_as_hash(@tour.reviews.newest.page(params[:page]), root: :reviews, user: current_user), status: 200
+      else
+        render json: ReviewBlueprint.render_as_hash(@tour.reviews.appear.newest.page(params[:page]), root: :reviews, user: current_user), status: 200
+      end
+    else
+      render json: ReviewBlueprint.render_as_hash(@tour.reviews.newest.all, root: :reviews, user: current_user), status: 200
+    end
   end
 
   private

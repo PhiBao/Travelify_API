@@ -59,8 +59,13 @@ class User < ApplicationRecord
     SecureRandom.urlsafe_base64
   end
 
-  def full_name
-    "#{self.first_name || ""} #{self.last_name || ""}"
+  def username
+    full_name = "#{self.first_name || ""} #{self.last_name || ""}"
+    if full_name.blank?
+      self.email
+    else
+      full_name
+    end
   end
 
   def avatar_url

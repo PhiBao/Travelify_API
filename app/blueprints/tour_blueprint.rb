@@ -19,10 +19,17 @@ class TourBlueprint < Blueprinter::Base
   view :detail do
     include_view :normal
     association :reviews, blueprint: ReviewBlueprint do |tour, options|
-      if options[:user]&.admin
-        tour.reviews.page(1)
+      if options[:user]&.admin?
+        tour.reviews.newest.page(1)
       else
-        tour.reviews.appear.page(1)
+        tour.reviews.appear.newest.page(1)
+      end
+    end
+    field :size do |tour, options|
+      if options[:user]&.admin?
+        tour.reviews.size
+      else
+        tour.reviews.appear.size
       end
     end
   end

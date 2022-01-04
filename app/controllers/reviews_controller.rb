@@ -1,7 +1,8 @@
 class ReviewsController < ApplicationController
-  before_action :logged_in_user, only: [:report]
-  before_action :admin_user, only: [:hide, :appear, :delete]
-  before_action :load_review, only: [:like, :hide, :appear, :report, :destroy]
+  before_action :logged_in_user, only: [:like, :report, :comment, :comments]
+  before_action :admin_user, only: [:hide, :appear, :destroy]
+  before_action :load_review, only: [:like, :hide, :appear, :report, :comment,
+                                     :comments, :destroy]
 
   def create
   end
@@ -31,7 +32,28 @@ class ReviewsController < ApplicationController
   def destroy
     @review.destroy!
     
-    render json: {id: @review.id}
+    render json: { id: @review.id }
+  end
+
+  def comment
+    comment = @review.comments.create!(body: params[:body], user_id: current_user&.id)
+
+    render json: ReviewBlueprint.render(comment, root: :comment), status: 201
+  end
+
+  def comments
+    page = params[:page] || 1
+    if current_user&.admin?
+      res = @review.comments.newest.page(page)    
+    else
+      res = @review.comments.appear.newest.page(page)
+    end
+
+    render json: {
+      id: @review.id,
+      data: CommentBlueprint.render_as_hash(res, user: current_user),
+      ids: res.pluck(:id)
+    }, status: 200
   end
 
   private

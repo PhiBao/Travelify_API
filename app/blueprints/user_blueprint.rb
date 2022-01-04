@@ -31,13 +31,7 @@ class UserBlueprint < Blueprinter::Base
   end
 
   view :short do
-    field :username do |user|
-      if user.full_name.blank?
-        user.email
-      else
-        user.full_name
-      end
-    end
+    field :username
   end
   
 end

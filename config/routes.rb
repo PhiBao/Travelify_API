@@ -15,6 +15,7 @@ Rails.application.routes.draw do
   resources :tours,     only: [:show, :create, :update, :destroy, :index] do
     member do
       get 'mark'
+      get 'reviews'
     end
   end
   resources :helpers,   only: [:index]
@@ -27,8 +28,20 @@ Rails.application.routes.draw do
       post 'report'
       get 'hide'
       get 'appear'
+      post 'comment'
+      get 'comments'
     end
   end
+  resources :comments,  only: [:create, :destroy] do
+    member do
+      get 'like'
+      post 'report'
+      get 'hide'
+      get 'appear'
+      get 'replies'
+    end
+  end
+
 
   mount LetterOpenerWeb::Engine, at: '/letters' if Rails.env.development?
 end

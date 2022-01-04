@@ -24,10 +24,11 @@ class Review < ApplicationRecord
   belongs_to :user
   belongs_to :tour
   has_many :actions, as: :target, dependent: :destroy
+  has_many :comments, as: :commentable, dependent: :destroy
 
   validates :hearts, presence: true
   validates :body, length: { maximum: 2000 }
-
+  
   def likes
     self.actions.like.size
   end

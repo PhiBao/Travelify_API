@@ -5,5 +5,12 @@ class ReviewBlueprint < Blueprinter::Base
   field(:liked, if: ->(_field_name, _tour, options) { options[:user].present? }) do |review, options|
     review.actions.like.find_by(user_id: options[:user].id).present?
   end
-  field :state, if: ->(_field_name, _tour, options) { options[:user]&.admin }
+  field :state, if: ->(_field_name, _tour, options) { options[:user]&.admin? }
+  field :size do |review, options|
+    if options[:user]&.admin?
+      review.comments.size
+    else
+      review.comments.appear.size
+    end
+  end
 end

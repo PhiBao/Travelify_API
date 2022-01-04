@@ -24,5 +24,4 @@ class Action < ApplicationRecord
   belongs_to :user
 
   validates :scope, presence: true
-  validates :user, uniqueness: { scope: :target }, if: Proc.new { |obj| obj.mark? || obj.like? }
 end
