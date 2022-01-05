@@ -1,13 +1,14 @@
 class CommentsController < ApplicationController
-  before_action :logged_in_user, only: [:create, :like, :report, :replies]
+  before_action :logged_in_user, only: [:reply, :like, :report]
   before_action :admin_user, only: [:hide, :appear, :destroy]
-  before_action :load_comment, only: [:like, :hide, :appear, :report, :create,
+  before_action :load_comment, only: [:like, :hide, :appear, :report, :reply,
                                      :replies, :destroy]
 
-  def create
+  def reply
     reply = @comment.replies.create!(body: params[:body], user_id: current_user&.id)
 
-    render json: CommentBlueprint.render(reply, root: :reply), status: 200
+    render json: { reply: CommentBlueprint.render_as_hash(reply),
+                   parent_id: reply.commentable_id }, status: 201
   end
 
   def like

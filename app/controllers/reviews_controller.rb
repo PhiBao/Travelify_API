@@ -1,5 +1,5 @@
 class ReviewsController < ApplicationController
-  before_action :logged_in_user, only: [:like, :report, :comment, :comments]
+  before_action :logged_in_user, only: [:like, :report, :comment]
   before_action :admin_user, only: [:hide, :appear, :destroy]
   before_action :load_review, only: [:like, :hide, :appear, :report, :comment,
                                      :comments, :destroy]
@@ -38,7 +38,8 @@ class ReviewsController < ApplicationController
   def comment
     comment = @review.comments.create!(body: params[:body], user_id: current_user&.id)
 
-    render json: ReviewBlueprint.render(comment, root: :comment), status: 201
+    render json: { comment: CommentBlueprint.render_as_hash(comment),
+                   parent_id: comment.commentable_id }, status: 201
   end
 
   def comments

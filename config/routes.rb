@@ -32,10 +32,11 @@ Rails.application.routes.draw do
       get 'comments'
     end
   end
-  resources :comments,  only: [:create, :destroy] do
+  resources :comments,  only: [:destroy] do
     member do
       get 'like'
       post 'report'
+      post 'reply'
       get 'hide'
       get 'appear'
       get 'replies'
