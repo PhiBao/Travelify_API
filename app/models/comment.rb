@@ -26,7 +26,7 @@ class Comment < ApplicationRecord
   has_many :actions, as: :target, dependent: :destroy
   has_many :replies, class_name: 'Comment', as: :commentable, dependent: :destroy
 
-  validates :body, presence: true, length: { maximum: 1000}
+  validates :body, presence: true, length: { maximum: 1000 }
 
   def likes
     self.actions.like.size

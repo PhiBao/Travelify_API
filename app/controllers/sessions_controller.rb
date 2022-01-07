@@ -3,7 +3,7 @@ class SessionsController < ApplicationController
 
   def create
     if @user&.authenticate(session_params[:password])
-      payload = { id: @user.id}
+      payload = { id: @user.id }
       token = encode(payload)
       render json: { token: token, user: UserBlueprint.render_as_hash(@user, view: :full),
                      remember_me: session_params[:remember_me] }, status: 200
@@ -14,12 +14,12 @@ class SessionsController < ApplicationController
 
   def social_create
     @user = User.from_omniauth(social_params)
-    payload = { id: @user.id}
+    payload = { id: @user.id }
     token = encode(payload)
     if @user.persisted?
       render json: { token: token, user: UserBlueprint.render_as_hash(@user, view: :full) }, status: 200
     else
-      render json: { messages: ['Can not login, please try again'], status: 400}
+      render json: { messages: ['Can not login, please try again'], status: 400 }
     end
   end
 

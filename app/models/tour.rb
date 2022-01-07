@@ -44,10 +44,19 @@ class Tour < ApplicationRecord
   validates :time, presence: true, format:  /\A\d+\-\d+\z/, if: :single?
   validates :images, content_type: [:png, :jpg, :jpeg, :gif],
                      size: { less_than: 45.megabytes }, limit: { max: 9 }
-  scope :valid, -> { where("kind = 1 OR begin_date >= ?", Time.zone.now) }
-  scope :hot, -> { left_joins(:bookings).group("tours.id").order('sum(bookings.total) desc') }
-  scope :favorite, -> { left_joins(:reviews).group("tours.id").order('sum(reviews.hearts) desc') }
+  scope :valid, ->(time = Time.zone.now) { where("kind = 1 OR begin_date >= ?", time) }
+  scope :hot, ->{ left_joins(:bookings).group("tours.id").order('sum(bookings.total) desc') }
+  scope :favorite, ->{ left_joins(:reviews).group("tours.id").order('sum(reviews.hearts) desc') }
   
+  def self.search(params) 
+    tours = all
+
+    tours = tours.valid(params[:date].to_datetime.beginning_of_day) if params[:date].present?
+    tours = tours.where(departure: params[:departure]) if params[:departure].present?
+
+    tours.newest
+  end
+
   # Accept nested attributes
   def tour_tags_attributes=(array)
     array.each do |item|

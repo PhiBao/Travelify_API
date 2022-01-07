@@ -1,5 +1,7 @@
 Rails.application.routes.draw do
   root 'static_pages#home'
+  post '/checkout',     to: 'checkout#create'
+  post 'sessions/social_auth/callback', to: 'sessions#social_create'
   resources :sessions,    only: [:create]
   resources :activation,  only: [:show, :update]
   resources :users,       only: [:index, :create, :update, :show, :destroy] do
@@ -11,7 +13,6 @@ Rails.application.routes.draw do
       put 'change_password'
     end
   end
-  post 'sessions/social_auth/callback', to: 'sessions#social_create'
   resources :tours,     only: [:show, :create, :update, :destroy, :index] do
     member do
       get 'mark'
@@ -20,29 +21,27 @@ Rails.application.routes.draw do
   end
   resources :helpers,   only: [:index]
   resources :bookings,  only: [:create]
-  post '/checkout',     to: 'checkout#create'
-  resources :webhooks,  only: :create
+  resources :webhooks,  only: [:create]
   resources :reviews,   only: [:create, :destroy] do
     member do
       get 'like'
-      post 'report'
       get 'hide'
       get 'appear'
-      post 'comment'
       get 'comments'
+      post 'report'
+      post 'comment'
     end
   end
   resources :comments,  only: [:destroy] do
     member do
       get 'like'
-      post 'report'
-      post 'reply'
       get 'hide'
       get 'appear'
       get 'replies'
+      post 'report'
+      post 'reply'
     end
   end
-
 
   mount LetterOpenerWeb::Engine, at: '/letters' if Rails.env.development?
 end

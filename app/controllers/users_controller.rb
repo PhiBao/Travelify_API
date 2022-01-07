@@ -12,7 +12,7 @@ class UsersController < ApplicationController
     user = User.new(user_params)
 
     if user.save
-      payload = { id: user.id}
+      payload = { id: user.id }
       token = encode(payload)
       user.create_activation_digest
       user.send_activation_email
@@ -78,14 +78,14 @@ class UsersController < ApplicationController
     if @user.authenticate(change_password_params[:current_password])
       if (change_password_params[:new_password] != 
           change_password_params[:password_confirmation])
-        render json: {messages: ["Password and password confirmation is not the same."]}, status: 400
+        render json: { messages: ["Password and password confirmation is not the same."] }, status: 400
       else
         unless @user.update(password: change_password_params[:new_password])
-          render json: {messages: ["Password is invalid."]}, status: 400
+          render json: { messages: ["Password is invalid."] }, status: 400
         end
       end
     else
-      render json: {messages: ["Current password is incorrect."]}, status: 400
+      render json: { messages: ["Current password is incorrect."] }, status: 400
     end
   end
   

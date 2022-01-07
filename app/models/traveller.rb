@@ -21,5 +21,5 @@ class Traveller < ApplicationRecord
   validates :phone_number, numericality: { only_integer: true },
                            length: { minimum: 9, maximum: 11 },
                            presence: true
-  validates :note, length: { maximum: 500}
+  validates :note, length: { maximum: 500 }
 end
