@@ -11,6 +11,7 @@ Rails.application.routes.draw do
     member do
       put 'reset_password'
       put 'change_password'
+      get 'bookings'
     end
   end
   resources :tours,     only: [:show, :create, :update, :destroy, :index] do
@@ -20,7 +21,11 @@ Rails.application.routes.draw do
     end
   end
   resources :helpers,   only: [:index]
-  resources :bookings,  only: [:create]
+  resources :bookings,  only: [:create] do
+    member do
+      post 'review'
+    end
+  end
   resources :webhooks,  only: [:create]
   resources :reviews,   only: [:create, :destroy] do
     member do

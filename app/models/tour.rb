@@ -29,7 +29,6 @@ class Tour < ApplicationRecord
   has_many :tags, through: :tour_tags
   has_many :bookings, dependent: :nullify
   has_many :actions, as: :target, dependent: :destroy
-  has_many :reviews, dependent: :destroy
 
   validates :name, presence: true, length: { maximum: 255}
   validates :departure, presence: true
@@ -46,7 +45,7 @@ class Tour < ApplicationRecord
                      size: { less_than: 45.megabytes }, limit: { max: 9 }
   scope :valid, ->(time = Time.zone.now) { where("kind = 1 OR begin_date >= ?", time) }
   scope :hot, ->{ left_joins(:bookings).group("tours.id").order('sum(bookings.total) desc') }
-  scope :favorite, ->{ left_joins(:reviews).group("tours.id").order('sum(reviews.hearts) desc') }
+  scope :favorite, ->{ left_joins(bookings: :review).group("tours.id").order('sum(reviews.hearts) desc') }
   
   def self.search(params) 
     tours = all
@@ -111,6 +110,10 @@ class Tour < ApplicationRecord
     return [] if self.tags.size == 0
 
     self.tags.map{ |tag| tag.name }
+  end
+
+  def reviews
+    Review.where(booking_id: self.bookings.pluck(:id))
   end
 
   def rate

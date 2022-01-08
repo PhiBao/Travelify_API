@@ -3,8 +3,7 @@
 # Table name: reviews
 #
 #  id         :integer          not null, primary key
-#  user_id    :integer
-#  tour_id    :integer
+#  booking_id :integer
 #  hearts     :integer
 #  body       :text
 #  state      :boolean          default("true")
@@ -13,16 +12,14 @@
 #
 # Indexes
 #
-#  index_reviews_on_tour_id  (tour_id)
-#  index_reviews_on_user_id  (user_id)
+#  index_reviews_on_booking_id  (booking_id)
 #
 
 class Review < ApplicationRecord
   paginates_per Settings.reviews_per
   enum state: { appear: true, hide: false }
 
-  belongs_to :user
-  belongs_to :tour
+  belongs_to :booking
   has_many :actions, as: :target, dependent: :destroy
   has_many :comments, as: :commentable, dependent: :destroy
 
@@ -31,5 +28,9 @@ class Review < ApplicationRecord
   
   def likes
     self.actions.like.size
+  end
+
+  def user
+    self.booking.user
   end
 end

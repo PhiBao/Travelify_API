@@ -1,7 +1,7 @@
 class UsersController < ApplicationController
   before_action :load_user_by_email, only: [:reset_password]
   before_action :load_user_by_id, only: [:destroy]
-  before_action :correct_user, only: [:show, :update, :change_password]
+  before_action :correct_user, only: [:show, :update, :change_password, :bookings]
   before_action :valid_user, only: [:reset_password]
   before_action :check_expiration, only: [:reset_password]
   
@@ -87,6 +87,23 @@ class UsersController < ApplicationController
     else
       render json: { messages: ["Current password is incorrect."] }, status: 400
     end
+  end
+
+  def bookings
+    page = params[:page] || 1
+    case params[:status]
+    when "confirming"
+      list = current_user.bookings.confirming.newest
+    when "paid"
+      list = current_user.bookings.paid.newest
+    when "canceled"
+      list = current_user.bookings.canceled.newest
+    else
+      list = current_user.bookings.newest
+    end
+
+    render json: BookingBlueprint.render(list.page(page), root: :list,
+                                         meta: { total: list.length })
   end
   
   private

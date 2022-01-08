@@ -40,7 +40,6 @@ class User < ApplicationRecord
   end
   has_many :bookings, dependent: :nullify
   has_many :actions, dependent: :nullify
-  has_many :reviews, dependent: :nullify
 
   validates :email, presence: true, uniqueness: true, format: VALID_EMAIL_REGEX
   validates :phone_number, numericality: { only_integer: true }, length: { minimum: 9, maximum: 11 }, allow_blank: true

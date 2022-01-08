@@ -82,15 +82,13 @@ ActiveRecord::Schema.define(version: 2022_01_04_052717) do
   end
 
   create_table "reviews", force: :cascade do |t|
-    t.integer "user_id"
-    t.integer "tour_id"
+    t.integer "booking_id"
     t.integer "hearts"
     t.text "body"
     t.boolean "state", default: true
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.index ["tour_id"], name: "index_reviews_on_tour_id"
-    t.index ["user_id"], name: "index_reviews_on_user_id"
+    t.index ["booking_id"], name: "index_reviews_on_booking_id"
   end
 
   create_table "tags", force: :cascade do |t|

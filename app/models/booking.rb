@@ -25,6 +25,7 @@ class Booking < ApplicationRecord
   belongs_to :user, optional: true
   belongs_to :tour, optional: true
   has_one :traveller, dependent: :destroy
+  has_one :review, dependent: :destroy
 
   validates :tour_id, presence: true, on: :create
   validates :total, presence: true
@@ -41,5 +42,13 @@ class Booking < ApplicationRecord
   # Send confirmed mailer
   def send_confirmed_mailer
     BookingMailer.booking_confirmed(self).deliver_now
+  end
+
+  def review_data
+    return {} if self.review.nil?
+    {
+      hearts: self.review.hearts,
+      body: self.review.body
+    }
   end
 end
