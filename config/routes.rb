@@ -48,7 +48,11 @@ Rails.application.routes.draw do
     end
   end
   namespace :admin do
-    resources :dashboard, only: [:index]
+    resources :dashboard, only: [:index] do
+      collection do
+        get 'analytics'
+      end
+    end
   end
 
   mount LetterOpenerWeb::Engine, at: '/letters' if Rails.env.development?

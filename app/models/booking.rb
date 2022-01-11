@@ -20,6 +20,7 @@
 #
 
 class Booking < ApplicationRecord
+  include TimeToStatistic
   paginates_per Settings.bookings_per
   enum status: { confirming: 1, paid: 2, canceled: 3 }
 
@@ -57,6 +58,7 @@ class Booking < ApplicationRecord
 
   def short_customer
     {
+      id: user && "#{self.id}s#{user.id}" || "#{self.id}t#{traveller.id}",
       avatar_url: user&.avatar_url || nil,
       username: user&.username || traveller.name
     }
@@ -64,6 +66,7 @@ class Booking < ApplicationRecord
 
   def full_customer
     {
+      id: user && "#{self.id}s#{user.id}" || "#{self.id}t#{traveller.id}",
       avatar_url: user&.avatar_url || nil,
       username: user&.username || traveller.name,
       phone_number: user&.phone_number || traveller.phone_number,

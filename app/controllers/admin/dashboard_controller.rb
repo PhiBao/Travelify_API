@@ -1,12 +1,13 @@
 module Admin
   class DashboardController < AdminController
     def index
-      featured = StatisticsData.call()
-      render json: { 
-        data: { 
-          featured: featured
-        }
-      }, status: 200
+      data = StatisticsData.call()
+      render json: { data: data }, status: 200
+    end
+
+    def analytics
+      data = AnalyticsData.call()
+      render json: { data: data }, status: 200
     end
   end
 end
