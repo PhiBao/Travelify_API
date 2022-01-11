@@ -103,7 +103,7 @@ class UsersController < ApplicationController
     end
 
     render json: BookingBlueprint.render(list.page(page), root: :list,
-                                         meta: { total: list.length })
+                                         view: :history, meta: { total: list.length })
   end
   
   private

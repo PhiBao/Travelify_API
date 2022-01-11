@@ -11,6 +11,21 @@ User.create!(
   admin: true
 )
 
+99.times do |n| 
+  first_name = Faker::Name.first_name
+  last_name = Faker::Name.last_name
+  email = "email-#{n+1}@travelify.vn"
+  password = "passw0rd"
+  User.create!(first_name: first_name,
+               last_name: last_name,
+               email: email,
+               password: password,
+               password_confirmation: password,
+               created_at: rand(1..20).days.ago,
+               activated: true,
+               activated_at: Time.zone.now)
+end
+
 10.times do
   name = Faker::Ancient.unique.god
   tag = Tag.create!(name: name)

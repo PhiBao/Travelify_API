@@ -20,6 +20,7 @@
 #
 
 class Booking < ApplicationRecord
+  paginates_per Settings.bookings_per
   enum status: { confirming: 1, paid: 2, canceled: 3 }
 
   belongs_to :user, optional: true
@@ -34,8 +35,10 @@ class Booking < ApplicationRecord
   validates :departure_date, presence: true
   validates :status, presence: true
 
+  scope :sum_at, ->(at) { where(updated_at: (at.beginning_of_month)..(at.end_of_month)).sum(:total) }
+
   # Create traveller while create boking
-  def traveller_attributes=(hash)  
+  def traveller_attributes=(hash)
     self.build_traveller(hash)
   end
 
@@ -49,6 +52,23 @@ class Booking < ApplicationRecord
     {
       hearts: self.review.hearts,
       body: self.review.body
+    }
+  end
+
+  def short_customer
+    {
+      avatar_url: user&.avatar_url || nil,
+      username: user&.username || traveller.name
+    }
+  end
+
+  def full_customer
+    {
+      avatar_url: user&.avatar_url || nil,
+      username: user&.username || traveller.name,
+      phone_number: user&.phone_number || traveller.phone_number,
+      email: user&.email || traveller.email,
+      note: traveller&.note || nil
     }
   end
 end

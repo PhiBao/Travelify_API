@@ -33,5 +33,10 @@ class UserBlueprint < Blueprinter::Base
   view :short do
     field :username
   end
+
+  view :widget do
+    include_view :short
+    field :email
+  end
   
 end

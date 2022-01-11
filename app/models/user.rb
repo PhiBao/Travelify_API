@@ -30,6 +30,7 @@
 require 'open-uri'
 
 class User < ApplicationRecord
+  include TimeToStatistic
   include Rails.application.routes.url_helpers
   has_secure_password
   attr_accessor :activation_token, :reset_password_token

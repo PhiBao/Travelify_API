@@ -16,6 +16,7 @@
 #
 
 class Review < ApplicationRecord
+  include TimeToStatistic
   paginates_per Settings.reviews_per
   enum state: { appear: true, hide: false }
 

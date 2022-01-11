@@ -18,6 +18,7 @@
 #
 
 class Comment < ApplicationRecord
+  include TimeToStatistic
   paginates_per Settings.comments_per
   enum state: { appear: true, hide: false }
 

@@ -18,6 +18,7 @@
 #
 
 class Action < ApplicationRecord
+  include TimeToStatistic
   enum scope: { like: 1, mark: 2, report: 3 }
 
   belongs_to :target, polymorphic: true
