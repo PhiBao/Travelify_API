@@ -20,7 +20,6 @@
 #
 
 class Booking < ApplicationRecord
-  include TimeToStatistic
   paginates_per Settings.bookings_per
   enum status: { confirming: 1, paid: 2, canceled: 3 }
 
@@ -37,6 +36,7 @@ class Booking < ApplicationRecord
   validates :status, presence: true
 
   scope :sum_at, ->(at) { where(updated_at: (at.beginning_of_month)..(at.end_of_month)).sum(:total) }
+  scope :statistic_at, ->(at) { where(updated_at: (at.beginning_of_month)..(at.end_of_month)) }
 
   # Create traveller while create boking
   def traveller_attributes=(hash)

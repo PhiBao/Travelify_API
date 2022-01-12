@@ -7,7 +7,7 @@ class AnalyticsData < ApplicationService
 
   def call
     now = Date.today
-    trend_topics = Booking.statistic_at(Date.today).joins(tour: :tags)
+    trend_topics = Booking.statistic_at(now).joins(tour: :tags)
                           .order("count(bookings.id) desc").limit(6).group("tags.id")
                           .pluck("tags.name, count(bookings.id), tags.tour_tags_count")
     trend_tours = Booking.statistic_at(now).joins(:tour)

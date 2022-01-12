@@ -51,6 +51,8 @@ Rails.application.routes.draw do
     resources :dashboard, only: [:index] do
       collection do
         get 'analytics'
+        get 'revenues'
+        get 'search'
       end
     end
   end
