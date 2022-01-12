@@ -6,24 +6,32 @@ class AnalyticsData < ApplicationService
   end
 
   def call
-    bookers = Booking.statistic_at(Date.today).joins(tour: :tags)
-                   .group("tags.name").count
-    tours = bookers.dup
-    tours.each { |k, v| tours[k] = Tag.find_by(name: k).tour_tags_count }
+    now = Date.today
+    trend_topics = Booking.statistic_at(Date.today).joins(tour: :tags)
+                          .order("count(bookings.id) desc").limit(6).group("tags.id")
+                          .pluck("tags.name, count(bookings.id), tags.tour_tags_count")
+    trend_tours = Booking.statistic_at(now).joins(:tour)
+                         .order("count(bookings.id) desc").limit(10).group("tours.id")
+                         .pluck("tours.name, count(bookings.id)")
+    trend_departure = Booking.statistic_at(now).joins(:tour)
+                             .order("count(bookings.id) desc").limit(10)
+                             .group("tours.departure").count
 
     @data = {
-       trend_topics: map(bookers),
-       topic_tours: map(tours)
+       trend_topics: map_array(trend_topics),
+       trend_tours: map(trend_tours),
+       trend_departure: map(trend_departure)
       }
   end
   
   private
   
-  def map data
-    data.map do |key, value|
+  def map_array arr
+    arr.map do |item|
       {
-        name: key,
-        value: value,
+        name: item[0],
+        value1: item[1],
+        value2: item[2]
       }
     end
   end

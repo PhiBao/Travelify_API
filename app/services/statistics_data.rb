@@ -32,15 +32,4 @@ class StatisticsData < ApplicationService
       last_bookings: BookingBlueprint.render_as_hash(Booking.last(6), view: :transaction)
     }
   end
-  
-  private
-  
-  def map data
-    data.map do |key, value|
-      {
-        name: key,
-        new: value,
-      }
-    end
-  end
 end
