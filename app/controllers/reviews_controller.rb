@@ -1,8 +1,7 @@
 class ReviewsController < ApplicationController
-  before_action :logged_in_user, only: [:like, :report, :comment]
-  before_action :admin_user, only: [:hide, :appear, :destroy]
-  before_action :load_review, only: [:like, :hide, :appear, :report, :comment,
-                                     :comments, :destroy]
+  before_action :logged_in_user, only: %i[like report comment]
+  before_action :admin_user, only: %i[hide appear destroy]
+  before_action :load_review, only: %i[like hide appear report comment comments destroy]
 
   def create
   end

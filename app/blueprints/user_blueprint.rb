@@ -38,5 +38,11 @@ class UserBlueprint < Blueprinter::Base
     include_view :short
     field :email
   end
+
+  view :admin do
+    include_view :full
+    field :username
+    exclude :admin
+  end
   
 end

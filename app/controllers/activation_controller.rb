@@ -1,7 +1,7 @@
 class ActivationController < ApplicationController
-  before_action :load_user_by_id, only: [:show]
-  before_action :load_user_by_email, only: [:update]
-  before_action :valid_user, only: [:update]
+  before_action :load_user_by_id, only: :show
+  before_action :load_user_by_email, only: :update
+  before_action :valid_user, only: :update
 
   def show
     if @user.activated?

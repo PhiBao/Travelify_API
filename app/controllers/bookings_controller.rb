@@ -1,5 +1,5 @@
 class BookingsController < ApplicationController
-  before_action :load_booking, only: [:review]
+  before_action :load_booking, only: :review
 
   def create
     @booking = Booking.create(booking_params)

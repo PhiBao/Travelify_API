@@ -1,9 +1,10 @@
 class SessionsController < ApplicationController
-  before_action :load_user_by_email, only: [:create]
+  before_action :load_user_by_email, only: :create
 
   def create
     if @user&.authenticate(session_params[:password])
-      payload = { id: @user.id }
+      payload = { id: @user.id,
+                  admin: @user.admin }
       token = encode(payload)
       render json: { token: token, user: UserBlueprint.render_as_hash(@user, view: :full),
                      remember_me: session_params[:remember_me] }, status: 200
@@ -14,7 +15,8 @@ class SessionsController < ApplicationController
 
   def social_create
     @user = User.from_omniauth(social_params)
-    payload = { id: @user.id }
+    payload = { id: @user.id,
+                admin: @user.admin }
     token = encode(payload)
     if @user.persisted?
       render json: { token: token, user: UserBlueprint.render_as_hash(@user, view: :full) }, status: 200

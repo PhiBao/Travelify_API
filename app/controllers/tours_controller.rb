@@ -1,7 +1,7 @@
 class ToursController < ApplicationController
-  before_action :admin_user, only: [:create, :update, :destroy]
-  before_action :load_tour, only: [:show, :update, :destroy, :mark, :reviews]
-  before_action :logged_in_user, only: [:mark]
+  before_action :admin_user, only: %i[create update destroy]
+  before_action :load_tour, only: %i[show update destroy mark reviews]
+  before_action :logged_in_user, only: :mark
 
   def index
     page = params[:page] || 1

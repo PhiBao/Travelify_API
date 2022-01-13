@@ -1,6 +1,6 @@
 class CheckoutController < ApplicationController
-  before_action :current_user, only: [:create]
-  before_action :load_tour, only: [:create]
+  before_action :current_user, only: :create
+  before_action :load_tour, only: :create
 
   def create
     num = checkout_params[:adults] + checkout_params[:children] / 2
