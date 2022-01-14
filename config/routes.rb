@@ -4,7 +4,7 @@ Rails.application.routes.draw do
   post 'sessions/social_auth/callback', to: 'sessions#social_create'
   resources :sessions, only: :create
   resources :activation, only: %i[show update]
-  resources :users, only: %i[index create update show destroy] do
+  resources :users, only: %i[create update show] do
     collection do
       get 'forgotten_password'
     end
@@ -55,6 +55,7 @@ Rails.application.routes.draw do
         get 'search'
       end
     end
+    resources :users, only: %i[index create destroy]
   end
 
   mount LetterOpenerWeb::Engine, at: '/letters' if Rails.env.development?

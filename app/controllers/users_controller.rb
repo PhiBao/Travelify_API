@@ -1,22 +1,15 @@
 class UsersController < ApplicationController
-  before_action :admin_user, only: :index
   before_action :load_user_by_email, only: :reset_password
-  before_action :load_user_by_id, only: :destroy
   before_action :correct_user, only: %i[show update change_password bookings]
   before_action :valid_user, only: :reset_password
   before_action :check_expiration, only: :reset_password
-  
-  def index
-    render json: { users: { list: UserBlueprint.render_as_hash(User.normal, view: :admin),
-                            type: "users" } }, status: 200
-  end
   
   def create
     user = User.new(user_params)
 
     if user.save
       payload = { id: user.id,
-                  admin: @user.admin }
+                  admin: user.admin }
       token = encode(payload)
       user.create_activation_digest
       user.send_activation_email
@@ -41,12 +34,6 @@ class UsersController < ApplicationController
     if @user.update(user_obj)
       render json: UserBlueprint.render(@user, root: :user, view: :full), status: 200
     else
-      render json: { messages: @user.errors.full_messages }, status: 400
-    end
-  end
-
-  def destroy
-    unless @user.destroy
       render json: { messages: @user.errors.full_messages }, status: 400
     end
   end
