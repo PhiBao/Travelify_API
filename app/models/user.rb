@@ -30,7 +30,6 @@
 require 'open-uri'
 
 class User < ApplicationRecord
-  enum admin: { mod: true, normal: false }
   include TimeToStatistic
   include Rails.application.routes.url_helpers
   has_secure_password
@@ -47,7 +46,9 @@ class User < ApplicationRecord
   validates :phone_number, numericality: { only_integer: true }, length: { minimum: 9, maximum: 11 }, allow_blank: true
   validates :address, length: { maximum: 100 }
   validates :avatar, content_type: [:png, :jpg, :jpeg, :gif],
-                     size:         { less_than: 5.megabytes }                 
+                     size:         { less_than: 5.megabytes }      
+  
+  scope :normal, -> { where(admin: false) }                   
 
   def User.digest(string)
     cost = ActiveModel::SecurePassword.min_cost ? BCrypt::Engine::MIN_COST :

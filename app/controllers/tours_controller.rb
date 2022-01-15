@@ -1,6 +1,6 @@
 class ToursController < ApplicationController
-  before_action :admin_user, only: %i[create update destroy]
-  before_action :load_tour, only: %i[show update destroy mark reviews]
+  include ToursHelper
+  before_action :load_tour, only: %i[show destroy mark reviews]
   before_action :logged_in_user, only: :mark
 
   def index
@@ -25,7 +25,7 @@ class ToursController < ApplicationController
       list = Tour.valid.newest
     end
 
-    render json: TourBlueprint.render(list.page(page), root: :list,
+    render json: TourBlueprint.render(list.page(page), root: :list, view: :normal,
                                       user: current_user, meta: { total: list.length })
   end
 
@@ -45,35 +45,11 @@ class ToursController < ApplicationController
     list = ([].concat(recently, related)).uniq(&:id)
 
     render json: {
-      list: TourBlueprint.render_as_hash(list, user: current_user),
+      list: TourBlueprint.render_as_hash(list, view: :normal, user: current_user),
       self: TourBlueprint.render_as_hash(@tour, view: :detail, user: current_user),
       related: related.pluck(:id),
       recently: recently ? recently.pluck(:id) : []
     }, status: 200
-  end
-
-  def create
-    tour = Tour.new(tour_params)
-
-    if tour.save
-      render json: TourBlueprint.render(tour, root: :tour), status: 201
-    else
-      render json: { messages: tour.errors.full_messages }, status: 400
-    end
-  end
-
-  def update
-    if @tour.update(tour_params)
-      render json: @tour, status: 200
-    else
-      render json: { messages: @tour.errors.full_messages }, status: 400
-    end
-  end
-
-  def destroy
-    unless @tour.destroy
-      render json: { messages: @tour.errors.full_messages }, status: 400
-    end
   end
 
   def mark
@@ -103,24 +79,5 @@ class ToursController < ApplicationController
 
   def search_params
     params.permit(:date, :departure)
-  end
-
-  def tour_params
-    params.permit(:name, :description, :time, :begin_date, :departure,
-                  :return_date, :price, :kind, :limit, :vehicles, :tags, images: [])
-          .tap do |attrs| 
-            attrs['tour_vehicles_attributes'] = JSON.parse(attrs.delete('vehicles')) 
-            attrs['tour_tags_attributes'] = JSON.parse(attrs.delete('tags')) 
-          end
-  end
-
-  def action_params
-    params.require(:rating).permit(:data)
-  end
-
-  def load_tour
-    @tour = Tour.find(params[:id])
-  rescue ActiveRecord::RecordNotFound
-    render json: { messages: ['Tour not found'] }, status: 404  
   end
 end

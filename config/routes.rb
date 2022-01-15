@@ -14,13 +14,12 @@ Rails.application.routes.draw do
       get 'bookings'
     end
   end
-  resources :tours, only: %i[show create update destroy index] do
+  resources :tours, only: %i[show index] do
     member do
       get 'mark'
       get 'reviews'
     end
   end
-  resources :helpers, only: :index
   resources :bookings, only: :create do
     member do
       post 'review'
@@ -56,6 +55,7 @@ Rails.application.routes.draw do
       end
     end
     resources :users, only: %i[index create destroy]
+    resources :tours, only: %i[index create update destroy]
   end
 
   mount LetterOpenerWeb::Engine, at: '/letters' if Rails.env.development?

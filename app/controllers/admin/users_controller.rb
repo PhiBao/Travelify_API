@@ -1,5 +1,6 @@
 module Admin
   class UsersController < AdminController
+    include UsersHelper
     before_action :load_user_by_id, only: :destroy
     
     def index
@@ -24,13 +25,6 @@ module Admin
       else 
         render json: { messages: user.errors.full_messages }, status: 404
       end
-    end
-
-    private
-
-    def user_params
-      params.require(:user).permit(:first_name, :last_name, :email, :password, :password_confirmation,
-                                  :address, :phone_number, :birthday)
     end
   end
 end

@@ -1,4 +1,5 @@
 class UsersController < ApplicationController
+  include UsersHelper
   before_action :load_user_by_email, only: :reset_password
   before_action :correct_user, only: %i[show update change_password bookings]
   before_action :valid_user, only: :reset_password
@@ -98,11 +99,6 @@ class UsersController < ApplicationController
   end
   
   private
-
-  def user_params
-    params.require(:user).permit(:first_name, :last_name, :email, :password, :password_confirmation,
-                                 :address, :phone_number, :birthday)
-  end
 
   def update_user_params
     params.permit(:first_name, :last_name, :email, :address, :phone_number, :birthday, :avatar)
