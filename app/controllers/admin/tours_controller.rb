@@ -23,7 +23,7 @@ module Admin
 
     def update
       if @tour.update(tour_params)
-        render json: @tour, status: 200
+        render json: TourBlueprint.render(@tour, view: :admin, root: :tour), status: 200
       else
         render json: { messages: @tour.errors.full_messages }, status: 400
       end
