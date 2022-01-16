@@ -1,6 +1,6 @@
 class ToursController < ApplicationController
   include ToursHelper
-  before_action :load_tour, only: %i[show destroy mark reviews]
+  before_action :load_tour, only: %i[show mark reviews]
   before_action :logged_in_user, only: :mark
 
   def index

@@ -59,20 +59,32 @@ class Tour < ApplicationRecord
   # Accept nested attributes
   def tour_tags_attributes=(array)
     array.each do |item|
-      if item[:_destroy]
-        tour_tags.find(item[:id]).destroy
+      if self.new_record?
+        self.tour_tags.build(item)
       else
-        tour_tags.build(item)
+        if item[:_destroy]
+          self.tour_tags.find_by_tag_id(item[:tag_id]).destroy
+        else
+          if item[:tag_id]
+            self.tour_tags.find_or_create_by(item)
+          else 
+            self.tour_tags.create(item)
+          end
+        end
       end
     end
   end
 
   def tour_vehicles_attributes=(array)
     array.each do |item|
-      if item[:_destroy]
-        tour_vehicles.find(item[:id]).destroy
+      if self.new_record?
+        self.tour_vehicles.build(item)
       else
-        tour_vehicles.build(item)
+        if item[:_destroy]
+          self.tour_vehicles.find_by_vehicle_id(item[:vehicle_id]).destroy
+        else
+          self.tour_vehicles.find_or_create_by(item)
+        end
       end
     end
   end
