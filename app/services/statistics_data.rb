@@ -28,8 +28,9 @@ class StatisticsData < ApplicationService
       cur_comments: cur_comments,
       last_comments: last_comments,
       users: users,
-      new_users: UserBlueprint.render_as_hash(User.last(7), view: :widget),
-      last_bookings: BookingBlueprint.render_as_hash(Booking.last(6), view: :transaction)
+      list: UserBlueprint.render_as_hash(User.last(7), view: :admin),
+      last_bookings: BookingBlueprint.render_as_hash(Booking.last(6), view: :transaction),
+      type: "home"
     }
   end
 end

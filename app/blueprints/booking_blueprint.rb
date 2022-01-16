@@ -19,4 +19,15 @@ class BookingBlueprint < Blueprinter::Base
   view :transaction do
     field :short_customer, name: :customer
   end
+
+  view :admin do
+    fields :adults, :children, :departure_date, :status
+    field :tour_name do |booking|
+      booking.tour.name
+    end
+    field :is_user do |booking|
+      !!booking.user
+    end
+    field :full_customer, name: :customer
+  end
 end

@@ -59,7 +59,7 @@ class Booking < ApplicationRecord
   def short_customer
     {
       id: user && "#{self.id}s#{user.id}" || "#{self.id}t#{traveller.id}",
-      avatar_url: user&.avatar_url || nil,
+      avatar_url: user&.avatar_url || "",
       username: user&.username || traveller.name
     }
   end
@@ -67,11 +67,11 @@ class Booking < ApplicationRecord
   def full_customer
     {
       id: user && "#{self.id}s#{user.id}" || "#{self.id}t#{traveller.id}",
-      avatar_url: user&.avatar_url || nil,
+      avatar_url: user&.avatar_url || "",
       username: user&.username || traveller.name,
       phone_number: user&.phone_number || traveller.phone_number,
       email: user&.email || traveller.email,
-      note: traveller&.note || nil
+      note: traveller&.note || ""
     }
   end
 end

@@ -100,10 +100,6 @@ class UsersController < ApplicationController
   
   private
 
-  def update_user_params
-    params.permit(:first_name, :last_name, :email, :address, :phone_number, :birthday, :avatar)
-  end
-
   def reset_password_params
     params.require(:user).permit(:password, :password_confirmation)
   end

@@ -1,6 +1,6 @@
 Rails.application.routes.draw do
   root 'static_pages#home'
-  post '/checkout', to: 'checkout#create'
+  
   post 'sessions/social_auth/callback', to: 'sessions#social_create'
   resources :sessions, only: :create
   resources :activation, only: %i[show update]
@@ -20,6 +20,7 @@ Rails.application.routes.draw do
       get 'reviews'
     end
   end
+  resources :checkout, only: :create
   resources :bookings, only: :create do
     member do
       post 'review'
@@ -54,8 +55,9 @@ Rails.application.routes.draw do
         get 'search'
       end
     end
-    resources :users, only: %i[index create destroy]
+    resources :users, only: %i[index create update destroy]
     resources :tours, only: %i[index create update destroy]
+    resources :bookings, only: %i[index destroy]
   end
 
   mount LetterOpenerWeb::Engine, at: '/letters' if Rails.env.development?

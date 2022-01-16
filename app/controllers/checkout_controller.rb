@@ -1,5 +1,5 @@
 class CheckoutController < ApplicationController
-  before_action :current_user, only: :create
+  before_action :logged_in_user, only: :create
   before_action :load_tour, only: :create
 
   def create

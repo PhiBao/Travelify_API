@@ -1,7 +1,6 @@
 module Admin
   class ToursController < ApplicationController
     include ToursHelper
-    before_action :admin_user, only: %i[index create update destroy]
     before_action :load_tour, only: %i[update destroy]
 
     def index
