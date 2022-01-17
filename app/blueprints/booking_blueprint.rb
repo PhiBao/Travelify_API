@@ -22,9 +22,7 @@ class BookingBlueprint < Blueprinter::Base
 
   view :admin do
     fields :adults, :children, :departure_date, :status
-    field :tour_name do |booking|
-      booking.tour.name
-    end
+    field :tour_data, name: :tour
     field :is_user do |booking|
       !!booking.user
     end

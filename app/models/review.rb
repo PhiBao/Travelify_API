@@ -25,7 +25,6 @@ class Review < ApplicationRecord
   has_many :comments, as: :commentable, dependent: :destroy
 
   validates :hearts, presence: true
-  validates :body, length: { maximum: 2000 }
   
   def likes
     self.actions.like.size

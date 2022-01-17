@@ -74,4 +74,13 @@ class Booking < ApplicationRecord
       note: traveller&.note || ""
     }
   end
+
+  def tour_data
+    {
+      id: tour.id,
+      name: tour.name,
+      price: tour.price,
+      kind: tour.kind
+    }
+  end
 end
