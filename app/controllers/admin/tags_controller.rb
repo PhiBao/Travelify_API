@@ -17,7 +17,7 @@ module Admin
     end
 
     def update
-     if @tag.update(update_params)
+     if @tag.update(tag_params)
         render json: TagBlueprint.render(@tag, view: :home, root: :tag), status: 200
       else
         render json: { messages: @tag.errors.full_messages }, status: 400

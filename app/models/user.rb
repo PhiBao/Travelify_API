@@ -36,9 +36,7 @@ class User < ApplicationRecord
   attr_accessor :activation_token, :reset_password_token
   before_save   :downcase_email
   
-  has_one_attached :avatar, dependent: :destroy do |attachable|
-    attachable.variant :thumb, resize: "64x64"
-  end
+  has_one_attached :avatar, dependent: :destroy
   has_many :bookings, dependent: :nullify
   has_many :actions, dependent: :nullify
 

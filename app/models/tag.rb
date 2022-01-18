@@ -16,9 +16,7 @@ class Tag < ApplicationRecord
   has_many :tour_tags, dependent: :destroy
   has_many :tours, through: :tour_vehicles
 
-  has_one_attached :illustration, dependent: :destroy do |attachable|
-    attachable.variant :medium, resize: "248x248"
-  end
+  has_one_attached :illustration, dependent: :destroy
 
   validates :name, presence: true, uniqueness: true
   validates :illustration, content_type: [:png, :jpg, :jpeg, :gif],
