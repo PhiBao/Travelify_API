@@ -27,7 +27,7 @@ Rails.application.routes.draw do
     end
   end
   resources :webhooks, only: :create
-  resources :reviews, only: %i[create destroy] do
+  resources :reviews, only: :destroy do
     member do
       get 'like'
       get 'hide'
@@ -62,6 +62,7 @@ Rails.application.routes.draw do
         get 'helpers'
       end
     end
+    resources :tags, only: %i[index create update destroy]
   end
 
   mount LetterOpenerWeb::Engine, at: '/letters' if Rails.env.development?

@@ -3,7 +3,6 @@ class TourBlueprint < Blueprinter::Base
   fields :name, :kind, :description, 
          :departure, :price, :created_at
   field :images_data, name: :images
-  association :tags, blueprint: TagBlueprint
 
   view :normal do
     fields :details, :rate
@@ -11,6 +10,7 @@ class TourBlueprint < Blueprinter::Base
     field(:marked, if: ->(_field_name, _tour, options) { options[:user].present? }) do |tour, options|
       tour.actions.mark.find_by(user_id: options[:user].id).present?
     end
+    association :tags, blueprint: TagBlueprint, view: :normal
   end
 
   view :detail do
@@ -34,5 +34,6 @@ class TourBlueprint < Blueprinter::Base
   view :admin do
     fields :limit, :time, :begin_date, :return_date
     association :vehicles, blueprint: VehicleBlueprint
+    association :tags, blueprint: TagBlueprint, view: :option
   end
 end

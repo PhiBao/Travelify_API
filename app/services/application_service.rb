@@ -8,7 +8,7 @@ class ApplicationService
     data.map do |key, value|
       {
         name: key,
-        value: value,
+        value: value.to_f,
       }
     end
   end

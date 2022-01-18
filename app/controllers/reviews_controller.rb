@@ -3,9 +3,6 @@ class ReviewsController < ApplicationController
   before_action :admin_user, only: %i[hide appear destroy]
   before_action :load_review, only: %i[like hide appear report comment comments destroy]
 
-  def create
-  end
-
   def like
     act = @review.actions.like.find_by(user_id: current_user.id)
  

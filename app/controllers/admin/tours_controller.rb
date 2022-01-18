@@ -7,7 +7,7 @@ module Admin
       render json: { tours: { list: TourBlueprint.render_as_hash(Tour.all, view: :admin),
                               type: "tours",
                               vehicles: VehicleBlueprint.render_as_hash(Vehicle.all),
-                              tags: TagBlueprint.render_as_hash(Tag.all) } }, status: 200
+                              tags: TagBlueprint.render_as_hash(Tag.all, view: :option) } }, status: 200
     end
 
     def create
