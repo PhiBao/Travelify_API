@@ -26,6 +26,7 @@ class Comment < ApplicationRecord
   belongs_to :commentable, polymorphic: true
   has_many :actions, as: :target, dependent: :destroy
   has_many :replies, class_name: 'Comment', as: :commentable, dependent: :destroy
+  has_many :notifications, as: :notifiable
 
   validates :body, presence: true, length: { maximum: 1000 }
 

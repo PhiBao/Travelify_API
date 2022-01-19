@@ -39,6 +39,8 @@ class User < ApplicationRecord
   has_one_attached :avatar, dependent: :destroy
   has_many :bookings, dependent: :nullify
   has_many :actions, dependent: :nullify
+  has_many :notifications, class_name: Notification.name,
+                           foreign_key: :recipient_id, dependent: :destroy
 
   validates :email, presence: true, uniqueness: true, format: VALID_EMAIL_REGEX
   validates :phone_number, numericality: { only_integer: true }, length: { minimum: 9, maximum: 11 }, allow_blank: true
@@ -46,7 +48,7 @@ class User < ApplicationRecord
   validates :avatar, content_type: [:png, :jpg, :jpeg, :gif],
                      size:         { less_than: 5.megabytes }      
   
-  scope :normal, -> { where(admin: false) }                   
+  scope :normal, -> { where(admin: false) }
 
   def User.digest(string)
     cost = ActiveModel::SecurePassword.min_cost ? BCrypt::Engine::MIN_COST :

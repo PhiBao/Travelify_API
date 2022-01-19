@@ -10,11 +10,19 @@ class ReviewsController < ApplicationController
       act.destroy!
     else
       @review.actions.like.create!(user_id: current_user.id)
+      Notification.create!(user_id: current_user.id,
+                           recipient_id: @review.user.id,
+                           action: "liked",
+                           notifiable: @review)
     end
   end
 
   def report
     @review.actions.report.create!(user_id: current_user.id, content: params[:content])
+    Notification.create!(user_id: current_user.id,
+      recipient_id: 1,
+      action: "reported",
+      notifiable: @review)
   end
 
   def hide
@@ -33,6 +41,10 @@ class ReviewsController < ApplicationController
 
   def comment
     comment = @review.comments.create!(body: params[:body], user_id: current_user&.id)
+    Notification.create!(user_id: current_user.id,
+                         recipient_id: @review.user.id,
+                         action: "commented",
+                         notifiable: @review)
 
     render json: { comment: CommentBlueprint.render_as_hash(comment),
                    parent_id: comment.commentable_id }, status: 201

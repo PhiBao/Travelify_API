@@ -32,11 +32,9 @@ class ToursController < ApplicationController
   def show
     if params[:watched]
       recently = params[:watched].split("-").compact_blank
-                                 .map{ |id| Tour.find(id)}
-                                 .reject { |x| x.id == @tour.id }
-                                 .last(3)
-    else
-      recently = []
+                                 .map{ |id| Tour.find_by_id(id)}
+                                 .reject { |x| x&.id == @tour.id }
+                                 .last(3).compact_blank
     end
     related = @tour.tags.map{ |tag| Tour.valid.includes(:tags)
                    .where("tags.name": tag.name ).to_a }

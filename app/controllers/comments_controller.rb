@@ -6,6 +6,10 @@ class CommentsController < ApplicationController
 
   def reply
     reply = @comment.replies.create!(body: params[:body], user_id: current_user&.id)
+    Notification.create!(user_id: current_user.id,
+                         recipient_id: @comment.user_id,
+                         action: "replied",
+                         notifiable: @comment)
 
     render json: { reply: CommentBlueprint.render_as_hash(reply),
                    parent_id: reply.commentable_id }, status: 201
@@ -18,11 +22,19 @@ class CommentsController < ApplicationController
       act.destroy!
     else
       @comment.actions.like.create!(user_id: current_user.id)
+      Notification.create!(user_id: current_user.id,
+                           recipient_id: @comment.user_id,
+                           action: "liked",
+                           notifiable: @comment)
     end
   end
 
   def report
     @comment.actions.report.create!(user_id: current_user.id, content: params[:content])
+    Notification.create!(user_id: current_user.id,
+                         recipient_id: 1,
+                         action: "reported",
+                         notifiable: @comment)
   end
 
   def hide

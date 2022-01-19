@@ -7,7 +7,10 @@ class SessionsController < ApplicationController
                   admin: @user.admin }
       token = encode(payload)
       render json: { token: token, user: UserBlueprint.render_as_hash(@user, view: :full),
-                     remember_me: session_params[:remember_me] }, status: 200
+                     remember_me: session_params[:remember_me],
+                     list: NotificationBlueprint.render_as_hash(@user.notifications.page(1)),
+                     unread: @user.notifications.unread.size,
+                     all: @user.notifications.size }, status: 200
     else
       render json: { messages: ['Invalid password'] }, status: 400
     end
@@ -19,7 +22,10 @@ class SessionsController < ApplicationController
                 admin: @user.admin }
     token = encode(payload)
     if @user.persisted?
-      render json: { token: token, user: UserBlueprint.render_as_hash(@user, view: :full) }, status: 200
+      render json: { token: token, user: UserBlueprint.render_as_hash(@user, view: :full),
+                     list: NotificationBlueprint.render_as_hash(@user.notifications.page(1)),
+                     unread: @user.notifications.unread.size,
+                     all: @user.notifications.size }, status: 200
     else
       render json: { messages: ['Can not login, please try again'], status: 400 }
     end

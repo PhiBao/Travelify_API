@@ -22,7 +22,10 @@ class UsersController < ApplicationController
   end
 
   def show
-    render json: UserBlueprint.render(@user, root: :user, view: :full), status: 200
+    render json: { user: UserBlueprint.render_as_hash(@user, view: :full),
+                   list: NotificationBlueprint.render_as_hash(current_user.notifications.page(1)),
+                   unread: current_user.notifications.unread.size,
+                   all: current_user.notifications.size }, status: 200
   end
 
   def update
@@ -96,6 +99,12 @@ class UsersController < ApplicationController
 
     render json: BookingBlueprint.render(list.page(page), root: :list,
                                          view: :history, meta: { total: list.length })
+  end
+
+  def notifications
+    page = params[:page] || 1
+    render json: NotificationBlueprint.render(current_user.notifications.page(page), root: :list,
+                                              meta: { total: current_user.notifications.size })
   end
   
   private
