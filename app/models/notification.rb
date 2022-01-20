@@ -40,7 +40,7 @@ class Notification < ApplicationRecord
       while curr.commentable_type != "Review"
         curr = cur.commentable
       end
-      return curr.booking.tour_id
+      return curr.commentable.booking.tour_id
     end
   end
 end

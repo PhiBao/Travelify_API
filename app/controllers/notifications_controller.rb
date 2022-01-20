@@ -6,6 +6,8 @@ class NotificationsController < ApplicationController
     if @notification.unread?
       @notification.watched!
     end
+
+    render json: { id: @notification.id }, status: 200
   end
 
   private

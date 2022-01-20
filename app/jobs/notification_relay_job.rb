@@ -3,6 +3,6 @@ class NotificationRelayJob < ApplicationJob
 
   def perform notification
     ActionCable.server.broadcast("notifications:#{notification.recipient_id}_channel",
-      { type: "new", notification: NotificationBlueprint.render_as_hash(notification)})
+                NotificationBlueprint.render_as_hash(notification, root: :notification))
   end
 end 

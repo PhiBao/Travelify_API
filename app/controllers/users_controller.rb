@@ -23,7 +23,7 @@ class UsersController < ApplicationController
 
   def show
     render json: { user: UserBlueprint.render_as_hash(@user, view: :full),
-                   list: NotificationBlueprint.render_as_hash(current_user.notifications.page(1)),
+                   list: NotificationBlueprint.render_as_hash(current_user.notifications.newest.page(1)),
                    unread: current_user.notifications.unread.size,
                    all: current_user.notifications.size }, status: 200
   end
@@ -103,8 +103,7 @@ class UsersController < ApplicationController
 
   def notifications
     page = params[:page] || 1
-    render json: NotificationBlueprint.render(current_user.notifications.page(page), root: :list,
-                                              meta: { total: current_user.notifications.size })
+    render json: NotificationBlueprint.render(current_user.notifications.newest.page(page), root: :list), status: 200
   end
   
   private
