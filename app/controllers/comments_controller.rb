@@ -6,10 +6,14 @@ class CommentsController < ApplicationController
 
   def reply
     reply = @comment.replies.create!(body: params[:body], user_id: current_user&.id)
-    Notification.create!(user_id: current_user.id,
+    if notification = Notification.replied.where(notifiable: @comment)&.last
+      count = Comment.appear.where(commentable: @comment).uniq(&:user_id).size - 1;
+      notification.update(user: current_user, others: count, status: "unread")
+    else
+    Notification.replied.create!(user_id: current_user.id,
                          recipient_id: @comment.user_id,
-                         action: "replied",
                          notifiable: @comment)
+    end
 
     render json: { reply: CommentBlueprint.render_as_hash(reply),
                    parent_id: reply.commentable_id }, status: 201
@@ -22,19 +26,27 @@ class CommentsController < ApplicationController
       act.destroy!
     else
       @comment.actions.like.create!(user_id: current_user.id)
-      Notification.create!(user_id: current_user.id,
-                           recipient_id: @comment.user_id,
-                           action: "liked",
-                           notifiable: @comment)
+      if notification = Notification.liked.where(notifiable: @comment)&.last
+        count = Action.like.where(target: @comment).uniq(&:user_id).size - 1;
+        notification.update(user: current_user, others: count, status: "unread")
+      else
+        Notification.liked.create!(user_id: current_user.id,
+                             recipient_id: @comment.user_id,
+                             notifiable: @comment)
+      end
     end
   end
 
   def report
     @comment.actions.report.create!(user_id: current_user.id, content: params[:content])
-    Notification.create!(user_id: current_user.id,
-                         recipient_id: 1,
-                         action: "reported",
-                         notifiable: @comment)
+    if notification = Notification.reported.where(notifiable: @comment)&.last
+      count = Action.report.where(target: @comment).uniq(&:user_id).size - 1;
+      notification.update(user: current_user, others: count, status: "unread")
+    else
+      Notification.reported.create!(user_id: current_user.id,
+                          recipient_id: 1,
+                          notifiable: @comment)
+    end
   end
 
   def hide

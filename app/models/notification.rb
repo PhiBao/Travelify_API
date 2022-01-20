@@ -5,7 +5,8 @@
 #  id              :integer          not null, primary key
 #  user_id         :integer
 #  recipient_id    :integer
-#  action          :string
+#  action          :integer
+#  others          :integer          default("0")
 #  notifiable_type :string
 #  notifiable_id   :integer
 #  status          :boolean          default("false")
@@ -22,11 +23,12 @@
 class Notification < ApplicationRecord
   paginates_per Settings.notifications_per
   enum status: { unread: false, watched: true}
+  enum action: { liked: 1, commented: 2, replied: 3, reported: 4}
   belongs_to :user
   belongs_to :recipient, class_name: :User
   belongs_to :notifiable, polymorphic: true
 
-  after_create :send_notification
+  after_save :send_notification
 
   def send_notification
     NotificationRelayJob.perform_now(self)

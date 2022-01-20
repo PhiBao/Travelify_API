@@ -10,19 +10,27 @@ class ReviewsController < ApplicationController
       act.destroy!
     else
       @review.actions.like.create!(user_id: current_user.id)
-      Notification.create!(user_id: current_user.id,
-                           recipient_id: @review.user.id,
-                           action: "liked",
-                           notifiable: @review)
+      if notification = Notification.liked.where(notifiable: @review)&.last
+        count = Action.like.where(target: @review).uniq(&:user_id).size - 1;
+        notification.update(user: current_user, others: count, status: "unread")
+      else
+        Notification.liked.create!(user_id: current_user.id,
+                                   recipient_id: @review.user.id,
+                                   notifiable: @review)
+      end
     end
   end
 
   def report
     @review.actions.report.create!(user_id: current_user.id, content: params[:content])
-    Notification.create!(user_id: current_user.id,
-      recipient_id: 1,
-      action: "reported",
-      notifiable: @review)
+    if notification = Notification.reported.where(notifiable: @review)&.last
+      count = Action.report.where(target: @review).uniq(&:user_id).size - 1;
+      notification.update(user: current_user, others: count, status: "unread")
+    else
+      Notification.reported.create!(user_id: current_user.id,
+                                    recipient_id: 1,
+                                    notifiable: @review)
+    end
   end
 
   def hide
@@ -41,11 +49,15 @@ class ReviewsController < ApplicationController
 
   def comment
     comment = @review.comments.create!(body: params[:body], user_id: current_user&.id)
-    Notification.create!(user_id: current_user.id,
-                         recipient_id: @review.user.id,
-                         action: "commented",
-                         notifiable: @review)
-
+    if notification = Notification.commented.where(notifiable: @review)&.last
+      count = Comment.appear.where(commentable: @review).uniq(&:user_id).size - 1;
+      notification.update(user: current_user, others: count, status: "unread")
+    else
+      Notification.commented.create!(user_id: current_user.id,
+                                     recipient_id: @review.user.id,
+                                     notifiable: @review)
+    end
+    
     render json: { comment: CommentBlueprint.render_as_hash(comment),
                    parent_id: comment.commentable_id }, status: 201
   end

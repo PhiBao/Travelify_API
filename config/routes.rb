@@ -13,6 +13,7 @@ Rails.application.routes.draw do
       put :change_password
       get :bookings
       get :notifications
+      put :read_all
     end
   end
   resources :tours, only: %i[show index] do

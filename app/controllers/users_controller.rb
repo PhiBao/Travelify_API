@@ -1,7 +1,7 @@
 class UsersController < ApplicationController
   include UsersHelper
   before_action :load_user_by_email, only: :reset_password
-  before_action :correct_user, only: %i[show update change_password bookings]
+  before_action :correct_user, only: %i[show update change_password bookings read_all]
   before_action :valid_user, only: :reset_password
   before_action :check_expiration, only: :reset_password
   
@@ -104,6 +104,10 @@ class UsersController < ApplicationController
   def notifications
     page = params[:page] || 1
     render json: NotificationBlueprint.render(current_user.notifications.newest.page(page), root: :list), status: 200
+  end
+
+  def read_all
+    @user.notifications.update_all(status: "watched")
   end
   
   private
