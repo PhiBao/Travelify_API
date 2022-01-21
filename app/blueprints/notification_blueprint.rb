@@ -18,5 +18,8 @@ class NotificationBlueprint < Blueprinter::Base
     field :state do |notification|
       notification.notifiable.state
     end
+    field :reason do |notification|
+      Action.report.where(target: notification.notifiable).map(&:content).join("<br>")
+    end
   end
 end
