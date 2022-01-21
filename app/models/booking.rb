@@ -58,29 +58,29 @@ class Booking < ApplicationRecord
 
   def short_customer
     {
-      id: user && "#{self.id}s#{user.id}" || "#{self.id}t#{traveller.id}",
+      id: "#{self.id}s#{user&.id || traveller&.id || SecureRandom.uuid}",
       avatar_url: user&.avatar_url || "",
-      username: user&.username || traveller.name
+      username: user&.username || traveller&.name || ""
     }
   end
 
   def full_customer
     {
-      id: user && "#{self.id}s#{user.id}" || "#{self.id}t#{traveller.id}",
+      id: "#{self.id}s#{user&.id || traveller&.id || SecureRandom.uuid}",
       avatar_url: user&.avatar_url || "",
-      username: user&.username || traveller.name,
-      phone_number: user&.phone_number || traveller.phone_number,
-      email: user&.email || traveller.email,
+      username: user&.username || traveller&.name || "",
+      phone_number: user&.phone_number || traveller&.phone_number || "",
+      email: user&.email || traveller&.email || "",
       note: traveller&.note || ""
     }
   end
 
   def tour_data
     {
-      id: tour.id,
-      name: tour.name,
-      price: tour.price,
-      kind: tour.kind
+      id: tour&.id,
+      name: tour&.name,
+      price: tour&.price,
+      kind: tour&.kind
     }
   end
 end

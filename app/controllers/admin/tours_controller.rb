@@ -1,5 +1,5 @@
 module Admin
-  class ToursController < ApplicationController
+  class ToursController < AdminController
     include ToursHelper
     before_action :load_tour, only: %i[update destroy]
 

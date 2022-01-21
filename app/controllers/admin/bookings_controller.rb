@@ -1,5 +1,5 @@
 module Admin
-  class BookingsController < ApplicationController
+  class BookingsController < AdminController
     include BookingsHelper
     before_action :load_booking, only: %i[update destroy] 
 

@@ -31,9 +31,8 @@ Rails.application.routes.draw do
   resources :webhooks, only: :create
   resources :reviews, only: :destroy do
     member do
-      get :like
-      get :hide
-      get :appear
+      put :like
+      put :toggle
       get :comments
       post :report
       post :comment
@@ -41,9 +40,8 @@ Rails.application.routes.draw do
   end
   resources :comments, only: :destroy do
     member do
-      get :like
-      get :hide
-      get :appear
+      put :like
+      put :toggle
       get :replies
       post :report
       post :reply
@@ -66,7 +64,7 @@ Rails.application.routes.draw do
     end
     resources :tags, only: %i[index create update destroy]
   end
-  resources :notifications, only: :update
+  resources :notifications, only: %i[index update destroy]
 
   mount ActionCable.server => '/cable'
   mount LetterOpenerWeb::Engine, at: '/letters' if Rails.env.development?

@@ -28,6 +28,9 @@ class Notification < ApplicationRecord
   belongs_to :recipient, class_name: :User
   belongs_to :notifiable, polymorphic: true
 
+  scope :nearly, -> { order(updated_at: :desc) }
+  scope :seriously, -> { order(others: :desc) }
+
   after_save :send_notification
 
   def send_notification
@@ -39,8 +42,8 @@ class Notification < ApplicationRecord
       return self.notifiable.booking.tour_id
     else
       curr = self.notifiable
-      while curr.commentable_type != "Review"
-        curr = cur.commentable
+      while curr.commentable_type != 'Review'
+        curr = curr.commentable
       end
       return curr.commentable.booking.tour_id
     end

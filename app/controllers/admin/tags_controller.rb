@@ -1,5 +1,5 @@
 module Admin
-  class TagsController < ApplicationController
+  class TagsController < AdminController
     before_action :load_tag, only: %i[update destroy] 
 
     def index

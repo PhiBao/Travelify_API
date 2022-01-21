@@ -23,7 +23,7 @@ class Review < ApplicationRecord
   belongs_to :booking
   has_many :actions, as: :target, dependent: :destroy
   has_many :comments, as: :commentable, dependent: :destroy
-  has_many :notifications, as: :notifiable
+  has_many :notifications, as: :notifiable, dependent: :destroy
 
   validates :hearts, presence: true
   

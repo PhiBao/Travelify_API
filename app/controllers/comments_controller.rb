@@ -1,8 +1,7 @@
 class CommentsController < ApplicationController
-  before_action :logged_in_user, only: [:reply, :like, :report]
-  before_action :admin_user, only: [:hide, :appear, :destroy]
-  before_action :load_comment, only: [:like, :hide, :appear, :report, :reply,
-                                     :replies, :destroy]
+  before_action :logged_in_user, only: %i[reply like report]
+  before_action :admin_user, only: %i[toggle destroy]
+  before_action :load_comment, only: %i[like toggle report reply replies destroy]
 
   def reply
     reply = @comment.replies.create!(body: params[:body], user_id: current_user&.id)
@@ -10,9 +9,9 @@ class CommentsController < ApplicationController
       count = Comment.appear.where(commentable: @comment).uniq(&:user_id).size - 1;
       notification.update(user: current_user, others: count, status: "unread")
     else
-    Notification.replied.create!(user_id: current_user.id,
-                         recipient_id: @comment.user_id,
-                         notifiable: @comment)
+      Notification.replied.create!(user_id: current_user.id,
+                                   recipient_id: @comment.user_id,
+                                   notifiable: @comment)
     end
 
     render json: { reply: CommentBlueprint.render_as_hash(reply),
@@ -24,6 +23,8 @@ class CommentsController < ApplicationController
  
     if act.present?
       act.destroy!
+
+      render json: { id: @comment.id, liked: false }, status: 200
     else
       @comment.actions.like.create!(user_id: current_user.id)
       if notification = Notification.liked.where(notifiable: @comment)&.last
@@ -34,6 +35,8 @@ class CommentsController < ApplicationController
                              recipient_id: @comment.user_id,
                              notifiable: @comment)
       end
+
+      render json: { id: @comment.id, liked: true }, status: 200
     end
   end
 
@@ -44,17 +47,20 @@ class CommentsController < ApplicationController
       notification.update(user: current_user, others: count, status: "unread")
     else
       Notification.reported.create!(user_id: current_user.id,
-                          recipient_id: 1,
-                          notifiable: @comment)
+                                    recipient_id: 1,
+                                    notifiable: @comment)
     end
   end
 
-  def hide
-    @comment.hide!
-  end
+  def toggle
+    if @comment.hide?
+      @comment.appear!
+    else
+      @comment.hide!
+    end
 
-  def appear
-    @comment.appear!
+    render json: { id: @comment.id,
+                   state: @comment.state }, status: 200
   end
 
   def destroy

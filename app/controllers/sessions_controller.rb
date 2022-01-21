@@ -8,7 +8,7 @@ class SessionsController < ApplicationController
       token = encode(payload)
       render json: { token: token, user: UserBlueprint.render_as_hash(@user, view: :full),
                      remember_me: session_params[:remember_me],
-                     list: NotificationBlueprint.render_as_hash(@user.notifications.newest.page(1)),
+                     list: NotificationBlueprint.render_as_hash(@user.notifications.nearly.page(1), view: :normal),
                      unread: @user.notifications.unread.size,
                      all: @user.notifications.size }, status: 200
     else
@@ -23,7 +23,7 @@ class SessionsController < ApplicationController
     token = encode(payload)
     if @user.persisted?
       render json: { token: token, user: UserBlueprint.render_as_hash(@user, view: :full),
-                     list: NotificationBlueprint.render_as_hash(@user.notifications.newest.page(1)),
+                     list: NotificationBlueprint.render_as_hash(@user.notifications.nearly.page(1), view: :normal),
                      unread: @user.notifications.unread.size,
                      all: @user.notifications.size }, status: 200
     else
