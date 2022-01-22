@@ -11,10 +11,16 @@ User.create!(
   admin: true
 )
 
+Vehicle.create!(name: "boat")
+Vehicle.create!(name: "bus")
+Vehicle.create!(name: "airplane")
+
+=begin
+
 50.times do |n| 
   first_name = Faker::Name.first_name
   last_name = Faker::Name.last_name
-  email = "email-#{n+1}@travelify.vn"
+  email = "example-#{n+1}@travelify.vn"
   password = "passw0rd"
   User.create!(first_name: first_name,
                last_name: last_name,
@@ -34,10 +40,6 @@ end
     filename: 'file1.jpg'
   )
 end
-
-Vehicle.create!(name: "boat")
-Vehicle.create!(name: "bus")
-Vehicle.create!(name: "airplane")
 
 tagsArray = (1..10).to_a
 vehiclesArray = (1..3).to_a
@@ -110,3 +112,4 @@ end
     )
   end
 end
+=end

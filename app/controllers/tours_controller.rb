@@ -40,7 +40,7 @@ class ToursController < ApplicationController
                    .where("tags.name": tag.name ).to_a }
                    .flatten.uniq(&:id)
                    .reject { |x| x.id == @tour.id }.sample(3)
-    list = ([].concat(recently, related)).uniq(&:id)
+    list = ([].concat(recently || [], related || [])).uniq(&:id)
 
     render json: {
       list: TourBlueprint.render_as_hash(list, view: :normal, user: current_user),
