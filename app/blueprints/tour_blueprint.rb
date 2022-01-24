@@ -1,8 +1,9 @@
 class TourBlueprint < Blueprinter::Base
   identifier :id
   fields :name, :kind, :description, 
-         :departure, :price, :created_at
+         :departure, :created_at
   field :images_data, name: :images
+  field :price_formatter, name: :price
 
   view :normal do
     fields :details, :rate

@@ -132,4 +132,8 @@ class Tour < ApplicationRecord
     return 0 unless self.reviews.size > 0
     self.reviews.sum(:hearts) / self.reviews.size
   end
+
+  def price_formatter
+    self.price.to_f
+  end
 end

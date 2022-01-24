@@ -79,8 +79,12 @@ class Booking < ApplicationRecord
     {
       id: tour&.id,
       name: tour&.name,
-      price: tour&.price,
+      price: tour&.price_formatter,
       kind: tour&.kind
     }
+  end
+
+  def total_formatter
+    self.total.to_f
   end
 end

@@ -1,6 +1,7 @@
 class BookingBlueprint < Blueprinter::Base
   identifier :id
-  fields :total, :created_at, :status
+  fields :created_at, :status
+  field :total_formatter, name: :total
 
   view :history do
     fields :adults, :children, :departure_date
