@@ -23,7 +23,7 @@
 class Notification < ApplicationRecord
   paginates_per Settings.notifications_per
   enum status: { unread: false, watched: true}
-  enum action: { liked: 1, commented: 2, replied: 3, reported: 4}
+  enum action: { liked: 1, commented: 2, replied: 3, reported: 4, booked: 5}
   belongs_to :user
   belongs_to :recipient, class_name: :User
   belongs_to :notifiable, polymorphic: true
@@ -40,6 +40,8 @@ class Notification < ApplicationRecord
   def tour_id
     if self.notifiable_type == 'Review'
       return self.notifiable.booking.tour_id
+    elsif self.notifiable_type == 'Tour'
+      return 0
     else
       curr = self.notifiable
       while curr.commentable_type != 'Review'
