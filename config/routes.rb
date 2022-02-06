@@ -38,7 +38,7 @@ Rails.application.routes.draw do
       post :comment
     end
   end
-  resources :comments, only: :destroy do
+  resources :comments, only: %i[update destroy] do
     member do
       put :like
       put :toggle

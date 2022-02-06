@@ -1,7 +1,15 @@
 class CommentsController < ApplicationController
   before_action :logged_in_user, only: %i[reply like report]
-  before_action :admin_user, only: %i[toggle destroy]
-  before_action :load_comment, only: %i[like toggle report reply replies destroy]
+  before_action :admin_user, only: :toggle
+  before_action :load_comment, only: %i[like toggle report reply replies update destroy]
+  before_action :owner_comment, only: %i[update destroy]
+
+  def update
+    @comment.update(body: params[:body])
+
+    render json: { id: @comment.id,
+                   body: @comment.body }, status: 200
+  end
 
   def reply
     reply = @comment.replies.create!(body: params[:body], user_id: current_user&.id)
@@ -94,5 +102,13 @@ class CommentsController < ApplicationController
     @comment = Comment.find(params[:id])
   rescue ActiveRecord::RecordNotFound
     render json: { messages: ['Comment not found'] }, status: 404  
+  end
+
+  def owner_comment
+    unless current_user&.admin? || current_user == @comment.user
+      render json: { messages: ['You don\'t have permission to access this'] }, status: 403
+    end
+  rescue ActiveRecord::RecordNotFound
+    render json: { messages: ['User not found'] }, status: 404
   end
 end
