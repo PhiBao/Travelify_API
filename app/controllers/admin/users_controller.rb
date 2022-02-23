@@ -23,10 +23,18 @@ module Admin
     end
 
     def destroy
-      if @user.destroy
-        render json: { id: @user.id }
-      else
-        render json: { messages: @user.errors.full_messages }, status: 400
+      User.transaction do
+        Review.transaction do
+          Comment.transaction do
+            Comment.where(user: @user).delete_all
+            Review.where(booking: @user.bookings).delete_all
+            if @user.destroy
+              render json: { id: @user.id }
+            else
+              render json: { messages: @user.errors.full_messages }, status: 400
+            end
+          end
+        end
       end
     end
 

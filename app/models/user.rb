@@ -39,6 +39,7 @@ class User < ApplicationRecord
   has_one_attached :avatar, dependent: :destroy
   has_many :bookings, dependent: :nullify
   has_many :actions, dependent: :destroy
+  has_many :comments, dependent: :destroy
   has_many :notifications, class_name: Notification.name,
                            foreign_key: :recipient_id, dependent: :destroy
 
