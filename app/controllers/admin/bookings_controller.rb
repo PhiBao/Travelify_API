@@ -11,7 +11,11 @@ module Admin
     def create
       @booking = Booking.create(booking_params)
       if @booking.save
-        @booking.send_confirmed_mailer if @booking.paid?
+        if @booking.paid?
+          num = (@booking.adults.to_i * 100.0 + @booking.children.to_i * 100.0 / 2) / 100.0
+          @booking.tour&.update!(quantity: tour.quantity + num)
+          @booking.send_confirmed_mailer
+        end 
         render json: BookingBlueprint.render(@booking, view: :admin, root: :booking), status: 200
       else
         render json: { messages: ["A error has occurred"] }, status: 400
@@ -19,11 +23,20 @@ module Admin
     end
 
     def update
-      send_mail = true if (update_params[:status] == "paid" && update_params[:status] != @booking.status)
+      paid = true if (update_params[:status] == "paid" && update_params[:status] != @booking.status)
+      cancel = true if (@booking.tour&.kind == "fixed" && @booking.paid? && update_params[:status] != "paid")
       
       if @booking.update(update_params)
-        if send_mail 
+        if paid
           @booking.send_confirmed_mailer
+          if @booking.tour&.kind == "fixed"
+            num = (@booking.adults.to_i * 100.0 + @booking.children.to_i * 100.0 / 2) / 100.0
+            @booking.tour&.update!(quantity: @booking.tour.quantity + num)
+          end
+        end
+        if cancel
+          num = (@booking.adults.to_i * 100.0 + @booking.children.to_i * 100.0 / 2) / 100.0
+          @booking.tour&.update!(quantity: @booking.tour.quantity - num)
         end
         render json: BookingBlueprint.render(@booking, view: :admin, root: :booking), status: 200
       else
